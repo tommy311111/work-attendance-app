@@ -8,4 +8,23 @@ use Illuminate\Database\Eloquent\Model;
 class AttendanceRequest extends Model
 {
     use HasFactory;
+
+    protected $guarded = [
+        'id',
+    ];
+
+    public function user()
+    {
+    return $this->belongsTo(User::class);
+    }
+
+    public function attendanceRequest()
+    {
+    return $this->belongsTo(AttendanceRequest::class);
+    }
+
+    public function AttendanceRequestBreak()
+    {
+        return $this->hasMany(AttendanceRequestBreak::class);
+    }
 }
