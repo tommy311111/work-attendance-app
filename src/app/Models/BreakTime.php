@@ -23,7 +23,7 @@ class BreakTime extends Model
     return $this->belongsTo(Attendance::class);
     }
 
-    public function AttendanceRequestBreak()
+    public function attendanceRequestBreaks()
     {
         return $this->hasMany(AttendanceRequestBreak::class);
     }

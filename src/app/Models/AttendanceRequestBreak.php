@@ -15,10 +15,10 @@ class AttendanceRequestBreak extends Model
 
     public function attendanceRequest()
     {
-    return $this->belongsTo(Attendance::class);
+    return $this->belongsTo(AttendanceRequest::class);
     }
 
-    public function BreakTimeRequest()
+    public function breakTime()
     {
     return $this->belongsTo(BreakTime::class);
     }
