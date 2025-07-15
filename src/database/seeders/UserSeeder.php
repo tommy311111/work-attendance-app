@@ -41,6 +41,14 @@ class UserSeeder extends Seeder
                 'role' => 'employee',
                 'email_verified_at' => now(),
             ],
+            [
+                'name' => '高橋 健一',
+                'email' => 'takahashi@example.com',
+                'password' => $password,
+                'role' => 'employee',
+                'email_verified_at' => now(),
+],
+
             ];
 
             foreach ($users as $user) {

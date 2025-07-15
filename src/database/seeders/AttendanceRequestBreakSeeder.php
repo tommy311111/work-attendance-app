@@ -17,7 +17,7 @@ class AttendanceRequestBreakSeeder extends Seeder
      */
     public function run()
     {
-         $requests = AttendanceRequest::all();
+        $requests = AttendanceRequest::all();
 
         foreach ($requests as $request) {
             // 該当の Attendance に紐づく BreakTime を取得
