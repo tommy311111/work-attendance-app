@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class BreakTime extends Model
 {
     use HasFactory;
+    protected $table = 'breaks';
 
     protected $guarded = [
         'id',
