@@ -16,7 +16,7 @@ class AttendanceRequestSeeder extends Seeder
         $attendances = Attendance::all();
 
         foreach ($attendances as $attendance) {
-            if (rand(1, 100) <= 8) { // 10%の確率で申請を作成
+            if (rand(1, 100) <= 8) { // 8%の確率で申請を作成
 
                 $clockIn = $attendance->clock_in ? Carbon::parse($attendance->clock_in)->addMinutes(rand(-15, 15)) : null;
                 $clockOut = $attendance->clock_out ? Carbon::parse($attendance->clock_out)->addMinutes(rand(-15, 15)) : null;
