@@ -1,7 +1,6 @@
 /node_modules
 /public/hot
 /public/storage
-/storage/*.key
 /vendor
 .env
 .env.backup
@@ -13,3 +12,12 @@ npm-debug.log
 yarn-error.log
 /.idea
 /.vscode
+
+# 一旦すべての storage 以下を除外
+/src/storage/*
+
+# 除外を解除（順番が重要）
+!/src/storage/app/
+!/src/storage/app/public/
+!/src/storage/app/public/images/
+!/src/storage/app/public/images/**
