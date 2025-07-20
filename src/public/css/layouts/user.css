@@ -5,13 +5,13 @@ body {
 }
 
 .header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  height: 70px;
-  padding: 0 30px;
-  background-color: #000;
-  color: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 70px;
+    padding: 0 30px;
+    background-color: #000;
+    color: #fff;
 }
 
 .header__logo {
@@ -36,14 +36,45 @@ body {
 }
 
 .header-ttl {
-  font-size: 24px;
-  width: 80px;
+    font-size: 24px;
+    width: 80px;
 }
 .header-nav-list {
-  display: flex;
-  font-weight: bold;
-  list-style: none;
+    display: flex;
+    font-weight: bold;
+    list-style: none;
 }
 .header-nav-item:not(:last-child) {
-  margin-right: 30px;
+    margin-right: 30px;
+}
+
+.logout-form {
+  margin: 0; /* <form>の余白を消す */
+}
+
+.logout-button {
+  background: none;
+  border: none;
+  color: #fff; /* 他のリンクと同じ色 */
+  text-decoration: none;
+  cursor: pointer;
+  font-size: inherit;
+  padding: 0;
+}
+.logout-button:hover {
+  opacity: 0.8;
+}
+
+.logout-button {
+  background: none;
+  border: none;
+  color: #fff; /* 他のリンクと同じ色 */
+  text-decoration: none;
+  cursor: pointer;
+  font-size: inherit;
+  padding: 0;
+  font-weight: bold;
+}
+.logout-button:hover {
+  opacity: 0.8;
 }

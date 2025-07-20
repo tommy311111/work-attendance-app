@@ -23,7 +23,13 @@
       <li class="header-nav-item"><a href="">勤怠</a></li>
       <li class="header-nav-item"><a href="">勤怠一覧</a></li>
       <li class="header-nav-item"><a href="">申請</a></li>
-      <li class="header-nav-item"><a href="">ログアウト</a></li>
+      <li class="header-nav-item">
+    <form action="/logout" method="POST" class="logout-form">
+        @csrf
+        <button type="submit" class="logout-button">ログアウト</button>
+    </form>
+</li>
+
     </ul>
   </nav>
 
