@@ -14,16 +14,25 @@ use Illuminate\Support\Str;
 use Laravel\Fortify\Fortify;
 use Laravel\Fortify\Contracts\LoginResponse;
 use App\Http\Responses\CustomLoginResponse;
+use Laravel\Fortify\Contracts\LogoutResponse;
 
 class FortifyServiceProvider extends ServiceProvider
 {
     /**
      * Register any application services.
      */
-    public function register(): void
-    {
-        $this->app->singleton(LoginResponse::class, CustomLoginResponse::class);
-    }
+    public function register()
+{
+    $this->app->singleton(LogoutResponse::class, function () {
+        return new class implements LogoutResponse {
+            public function toResponse($request)
+            {
+                // ログアウト後にリダイレクトしたいURL
+                return redirect('/login');
+            }
+        };
+    });
+}
 
     /**
      * Bootstrap any application services.
