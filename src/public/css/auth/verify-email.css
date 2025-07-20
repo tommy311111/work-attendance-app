@@ -1,0 +1,119 @@
+.verify__content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3.75rem 1.25rem;
+    min-height: 80vh;
+    background-color: #f9f9f9;
+    text-align: center;
+}
+
+.verify__heading {
+    font-size: 2rem;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.verify__message {
+    font-weight: bold;
+    font-size: 1.2rem;
+    margin-bottom: 1.25rem;
+    color: #000;
+    max-width: 40rem;
+}
+
+.verify__alert {
+    color: green;
+    margin-bottom: 1.25rem;
+    margin-top: 0;
+    font-weight: 500;
+}
+
+.verify__form {
+    margin-bottom: 1.25rem;
+    width: 100%;
+    max-width: 20rem;
+}
+
+.verify__button {
+    padding: 0.5rem 0.875rem;
+    font-size: 1rem;
+    border: 0.125rem solid #777;
+    background-color: #eee;
+    color: #000;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-weight: 500;
+    width: 60%;
+    box-sizing: border-box;
+    margin-top: 0.5rem;
+}
+
+.verify__button:hover {
+    background-color: #ddd;
+}
+
+.verify__resend {
+    background: none;
+    border: none;
+    color: #00aaff;
+    font-size: 0.95rem;
+    cursor: pointer;
+    padding: 0;
+    margin-top: 0.5rem;
+}
+
+@media screen and (min-width: 1400px) and (max-width: 1540px) {
+    .verify__content {
+        padding: 4rem 2rem;
+    }
+
+    .verify__message {
+        font-size: 1.3rem;
+        max-width: 45rem;
+    }
+
+    .verify__form {
+        max-width: 22rem;
+    }
+
+    .verify__button {
+        font-size: 1.1rem;
+        padding: 0.75rem 1.5rem;
+    }
+
+    .verify__resend {
+        font-size: 1rem;
+    }
+}
+
+@media screen and (min-width: 768px) and (max-width: 850px) {
+    .verify__content {
+        padding: 3rem 1rem;
+    }
+
+    .verify__heading {
+        font-size: 1.5rem;
+    }
+
+    .verify__message {
+        font-size: 1.1rem;
+        max-width: 35rem;
+    }
+
+    .verify__form {
+        max-width: 18rem;
+    }
+
+    .verify__button {
+        font-size: 0.95rem;
+        padding: 0.55rem 1rem;
+    }
+
+    .verify__resend {
+        font-size: 0.9rem;
+    }
+}
