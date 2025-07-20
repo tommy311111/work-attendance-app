@@ -28,7 +28,7 @@ h1.register-form__heading-title {
 }
 
 h2.form__group-title {
-    margin: 0.5rem 0;
+    margin: 0.25rem 0;
     font-size: 1.125rem;
     font-weight: 600;
     line-height: 1.4;
@@ -47,7 +47,7 @@ h2.form__group-title {
 .form__error {
     color: #F65A5A;
     font-size: 0.875rem;
-    padding: 0.5rem 0;
+    padding: 0.25rem 0;
 }
 
 .form__button {
@@ -64,7 +64,7 @@ h2.form__group-title {
     font-size: 1.25rem;
     font-weight: 600;
     color: #fff;
-    background-color: #FF4B4B;
+    background-color: #000000;
     cursor: pointer;
 }
 
