@@ -1,5 +1,3 @@
-register.css
-
 .register__content {
     background: #FFFFFF;
     padding: 2.5rem;
@@ -20,7 +18,8 @@ h1.register-form__heading-title {
 
 .register-form {
     margin: 0 auto;
-    width: 31.25rem;
+    width: 31.25rem; /* = 500px */
+    max-width: 100%;
 }
 
 .form__group {
@@ -34,9 +33,8 @@ h2.form__group-title {
     line-height: 1.4;
 }
 
-
 .form__input--text input {
-    width: 31.25rem;
+    width: 100%;
     font-size: 0.875rem;
     padding: 0.625rem;
     border: 1px solid #E0DFDE;
@@ -85,24 +83,56 @@ h2.form__group-title {
     text-decoration: none;
 }
 
-@media screen and (max-width: 850px) and (min-width: 768px) {
+/* -----------------------------
+    レスポンシブ対応
+----------------------------- */
+
+/* タブレット用 (768px〜850px) */
+@media screen and (max-width: 850px) {
     .register-form {
         width: 90%;
-        max-width: 30rem;
     }
 
-    .form__input--text input {
+    h1.register-form__heading-title {
+        font-size: 2rem;
+    }
+
+    h2.form__group-title {
+        font-size: 1rem;
+    }
+
+    .form__button-submit {
+        font-size: 1.125rem;
+    }
+}
+
+/* スマホサイズ (〜767px) */
+@media screen and (max-width: 767px) {
+    .register__content {
+        padding: 1.5rem;
+        border-radius: 1rem;
+    }
+
+    h1.register-form__heading-title {
+        font-size: 1.75rem;
+    }
+
+    .register-form {
+        width: 95%;
+    }
+
+    .form__button-submit {
+        font-size: 1rem;
+    }
+
+    .login__link {
         width: 100%;
     }
 }
 
-@media screen and (max-width: 767px) {
+/* ワイドPC対応（~1540pxでも中央寄せを保つ） */
+@media screen and (min-width: 1400px) {
     .register-form {
-        width: 95%;
-        max-width: none;
-    }
-
-    .form__input--text input {
-        width: 100%;
+        width: 31.25rem;
     }
 }
