@@ -12,6 +12,7 @@ body {
     padding: 0 30px;
     background-color: #000;
     color: #fff;
+    margin-bottom: 30px;
 }
 
 .header__logo {
@@ -26,7 +27,6 @@ body {
     height: 30px;
     display: block;
     max-height: 30px;
-    vertical-align: middle;
 }
 
 .header a {
