@@ -11,18 +11,24 @@
 <body>
 
 <header class="header">
-        <div class="header__inner">
-            <div class="header__top">
+        
                 <h1 class="header__logo">
-                     //勤怠登録へ
+                    <a href="{{ route('attendance.show') }}">
                         <img src="{{ asset('storage/images/logo.svg') }}" alt="COACHTECH">
                     </a>
                 </h1>
 
-            </div>
-            <div class="header__bottom">
-            </div>
-        </div>
+            <nav class="header-nav">
+    <ul class="header-nav-list">
+      <li class="header-nav-item"><a href="">勤怠</a></li>
+      <li class="header-nav-item"><a href="">勤怠一覧</a></li>
+      <li class="header-nav-item"><a href="">申請</a></li>
+      <li class="header-nav-item"><a href="">ログアウト</a></li>
+    </ul>
+  </nav>
+
+
+       
     </header>
     <main>
         @yield('content')
