@@ -26,7 +26,7 @@ class RegisterController extends Controller
 
         Auth::login($user);
         event(new Registered($user));
-        return redirect()->route('profile.edit');//→ プロフィール編集画面に遷移する.今回は勤怠登録画面
+        return redirect()->route('attendance.show');//今回は勤怠登録画面
     }
 
 }
