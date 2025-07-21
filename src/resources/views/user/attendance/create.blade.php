@@ -1,23 +1,59 @@
 @extends('layouts.user')
 
-@section('content')
-<div class="container">
-    <h1>勤怠管理</h1>
-    <p>現在のステータス：<strong>{{ $attendance->status }}</strong></p>
-
-    <form method="POST" action="{{ route('attendance.action') }}">
-        @csrf
-
-        @if($attendance->status === '勤務外')
-            <button type="submit" name="action" value="start_work">出勤</button>
-        @elseif($attendance->status === '出勤中')
-            <button type="submit" name="action" value="start_break">休憩</button>
-            <button type="submit" name="action" value="end_work">退勤</button>
-        @elseif($attendance->status === '休憩中')
-            <button type="submit" name="action" value="end_break">休憩終了</button>
-        @elseif($attendance->status === '退勤済')
-            <p>本日の勤務は終了しています。</p>
-        @endif
-    </form>
-</div>
+@section('css')
+<link rel="stylesheet" href="{{ asset('css/user/attendance\create.css') }}">
 @endsection
+
+@section('content')
+    <div class="attendance__content">
+        {{-- ステータス表示 --}}
+        <div class="attendance__status">
+            現在のステータス：{{ $attendance->status }}
+        </div>
+
+        {{-- 今日の日付 --}}
+        <div class="attendance__date">
+            {{ \Carbon\Carbon::today()->format('Y年n月j日(D)') }}
+        </div>
+
+        {{-- 現在の時刻（JavaScriptでリアルタイム表示） --}}
+        <div id="clock" class="attendance__clock"></div>
+
+        {{-- ボタン --}}
+        <form method="POST" action="{{ route('attendance.action') }}" class="attendance__form">
+            @csrf
+
+            @if ($attendance->status === '勤務外')
+                <input type="hidden" name="action" value="start_work">
+                <button type="submit" class="attendance__button">出勤</button>
+
+            @elseif ($attendance->status === '出勤中' && !$attendance->on_break)
+                <input type="hidden" name="action" value="start_break">
+                <button type="submit" class="attendance__button">休憩</button>
+
+            @elseif ($attendance->status === '休憩中')
+                <input type="hidden" name="action" value="end_break">
+                <button type="submit" class="attendance__button">休憩戻</button>
+
+            @elseif ($attendance->status === '出勤中' && $attendance->work_end_at === null)
+                <input type="hidden" name="action" value="end_work">
+                <button type="submit" class="attendance__button">退勤</button>
+            @endif
+        </form>
+    </div>
+
+    {{-- 現在時刻表示用スクリプト --}}
+    <script>
+        function updateClock() {
+            const now = new Date();
+            const hour = String(now.getHours()).padStart(2, '0');
+            const minute = String(now.getMinutes()).padStart(2, '0');
+            document.getElementById('clock').textContent = `${hour}:${minute}`;
+        }
+
+        setInterval(updateClock, 1000);
+        updateClock();
+    </script>
+@endsection
+
+
