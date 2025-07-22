@@ -1,10 +1,9 @@
 @extends('layouts.user')
 
 @section('content')
-<link rel="stylesheet" href="{{ asset('css/auth/verify.css') }}">
+<link rel="stylesheet" href="{{ asset('css/auth/verify-email.css') }}">
 
 <div class="verify__content">
-    <h1 class="verify__heading">メール認証</h1>
 
     <p class="verify__message">
         登録していただいたメールアドレスに認証メールを送付しました。<br>
