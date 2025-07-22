@@ -5,55 +5,63 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use App\Models\User;
 use App\Models\Attendance;
-use Illuminate\Support\Carbon;
+use Carbon\Carbon;
+use Carbon\CarbonPeriod;
+
 
 class AttendanceSeeder extends Seeder
 {
     public function run()
     {
-        // 管理者取得（今回は未使用）
-        $admin = User::where('role', 'admin')->first();
-
         // 従業員だけ取得
         $employees = User::where('role', 'employee')->get();
 
-        // 勤務期間開始・終了日
+        // 勤務期間（全日）を設定
         $startDate = Carbon::create(2025, 6, 1);
         $endDate = Carbon::create(2025, 9, 30);
+        $allDays = CarbonPeriod::create($startDate, $endDate); // 6月〜9月の全日
 
         foreach ($employees as $employee) {
-            $currentDate = $startDate->copy();
+            $workDays = [];
 
-            while ($currentDate->lte($endDate)) {
-                // 1週間の範囲の開始日と終了日を決める
-                $weekStart = $currentDate->copy();
+            // 各週ごとに4日を勤務日として選出（6月〜9月）
+            $weekStart = $startDate->copy();
+            while ($weekStart->lte($endDate)) {
                 $weekEnd = $weekStart->copy()->addDays(6);
                 if ($weekEnd->gt($endDate)) {
                     $weekEnd = $endDate->copy();
                 }
 
-                // その週の日付リストを作成
+                // 今週の全日を取得
                 $weekDates = [];
-                $tempDate = $weekStart->copy();
-                while ($tempDate->lte($weekEnd)) {
-                    $weekDates[] = $tempDate->toDateString();
-                    $tempDate->addDay();
+                $temp = $weekStart->copy();
+                while ($temp->lte($weekEnd)) {
+                    $weekDates[] = $temp->toDateString();
+                    $temp->addDay();
                 }
 
-                // その中からランダムに4日（または週の残り日数）選ぶ
+                // 最大4日を勤務日に設定
                 $workDaysCount = min(4, count($weekDates));
-                $workDays = (array)array_rand(array_flip($weekDates), $workDaysCount);
-
-                // 選んだ日付で勤怠を作成
-                foreach ($workDays as $date) {
-                    Attendance::factory()->create([
-                        'user_id' => $employee->id,
-                        'date' => $date,
-                    ]);
-                }
+                $randomWorkDays = (array)array_rand(array_flip($weekDates), $workDaysCount);
+                $workDays = array_merge($workDays, $randomWorkDays);
 
                 // 次の週へ
-                $currentDate->addWeek();
+                $weekStart->addWeek();
+            }
+
+            // すべての日について、勤務日ならランダムステータス、その他は勤務外
+            foreach ($allDays as $date) {
+                $dateStr = $date->format('Y-m-d');
+
+                $status = in_array($dateStr, $workDays)
+                    ? collect(['出勤中', '休憩中', '退勤済'])->random()
+                    : '勤務外';
+
+                Attendance::factory()->create([
+                    'user_id' => $employee->id,
+                    'date' => $dateStr,
+                    'status' => $status,
+                ]);
             }
         }
 
