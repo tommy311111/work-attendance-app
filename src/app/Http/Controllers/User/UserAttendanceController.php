@@ -43,20 +43,21 @@ class UserAttendanceController extends Controller
         $action = $request->input('action');
 
         // すでに出勤していたらリダイレクト（重複防止）
-        if ($action === 'start_work' && $attendance->work_start_at) {
+        if ($action === 'start_work' && $attendance->clock_in) {
             return back()->withErrors(['action' => 'すでに出勤済みです。']);
         }
 
         switch ($action) {
             case 'start_work':
                 $attendance->status = Attendance::STATUS['WORKING'];
-                $attendance->work_start_at = now();
+                $attendance->clock_in = now();
                 break;
 
             case 'start_break':
                 $attendance->status = Attendance::STATUS['ON_BREAK'];
                 BreakTime::create([
                     'attendance_id' => $attendance->id,
+                    'user_id' => Auth::id(),
                     'break_start_at' => now()
                 ]);
                 break;
@@ -76,8 +77,9 @@ class UserAttendanceController extends Controller
 
             case 'end_work':
                 $attendance->status = Attendance::STATUS['FINISHED'];
-                $attendance->work_end_at = now();
-                session()->flash('message', 'お疲れ様でした。');
+                $attendance->clock_out = now();
+                $attendance->save();
+                return redirect()->route('attendance.show');
                 break;
         }
 

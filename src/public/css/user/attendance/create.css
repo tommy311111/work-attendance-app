@@ -42,3 +42,27 @@
     border-radius: 10px;
     cursor: pointer;
 }
+
+.attendance__button-group {
+    display: flex;
+    gap: 16px;
+    margin-top: 30px;
+}
+
+.attendance__button--white {
+    background-color: white;
+    color: black;
+    padding: 6px 38px;
+    font-size: 1.2rem;
+    border-radius: 10px;
+    cursor: pointer;
+    border: none;
+}
+
+.attendance__message {
+    margin-top: 20px;
+    font-size: 1.2rem;
+    color: #333;
+    font-weight: bold;
+}
+

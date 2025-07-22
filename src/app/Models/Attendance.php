@@ -32,6 +32,6 @@ class Attendance extends Model
         'OFF_DUTY' => '勤務外',
         'WORKING' => '出勤中',
         'ON_BREAK' => '休憩中',
-        'FINISHED' => '退勤済み',
+        'FINISHED' => '退勤済',
     ];
 }

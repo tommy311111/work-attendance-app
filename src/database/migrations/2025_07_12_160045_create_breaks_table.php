@@ -17,8 +17,8 @@ class CreateBreaksTable extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade'); // 外部キー: users.id
             $table->foreignId('attendance_id')->constrained('attendances')->onDelete('cascade'); // 外部キー: attendances.id
-            $table->timestamp('break_start_at');
-            $table->timestamp('break_end_at');
+            $table->timestamp('break_start_at')->nullable();;
+            $table->timestamp('break_end_at')->nullable();;
             $table->timestamps();
         });
     }
