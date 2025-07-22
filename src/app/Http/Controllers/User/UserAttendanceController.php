@@ -15,15 +15,19 @@ class UserAttendanceController extends Controller
     public function show()
     {
         $user = Auth::user();
-        $today = Carbon::today()->toDateString();
+        $today = Carbon::today();
+
+        // 曜日を日本語1文字で取得
+    $weekDays = ['日', '月', '火', '水', '木', '金', '土'];
+    $weekdayJapanese = $weekDays[$today->dayOfWeek];
 
         // 定数配列の値を使って初期状態セット
         $attendance = Attendance::firstOrCreate(
-            ['user_id' => $user->id, 'date' => $today],
+            ['user_id' => $user->id, 'date' => $today->toDateString()],
             ['status' => Attendance::STATUS['OFF_DUTY']]
         );
 
-        return view('user.attendance.create', compact('attendance'));
+        return view('user.attendance.create', compact('attendance', 'today', 'weekdayJapanese'));
     }
 
     // 勤怠ステータス変更

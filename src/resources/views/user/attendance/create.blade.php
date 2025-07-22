@@ -8,13 +8,14 @@
     <div class="attendance__content">
         {{-- ステータス表示 --}}
         <div class="attendance__status">
-            現在のステータス：{{ $attendance->status }}
+            {{ $attendance->status }}
         </div>
 
         {{-- 今日の日付 --}}
         <div class="attendance__date">
-            {{ \Carbon\Carbon::today()->format('Y年n月j日(D)') }}
+            {{ $today->format('Y年n月j日') }}（{{ $weekdayJapanese }}）
         </div>
+
 
         {{-- 現在の時刻（JavaScriptでリアルタイム表示） --}}
         <div id="clock" class="attendance__clock"></div>

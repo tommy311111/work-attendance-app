@@ -4,20 +4,23 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 40px;
+    margin-top: 0;
+    padding-top: 20vh;
 }
 
 .attendance__status {
     background-color: #ccc;
-    padding: 10px 20px;
-    border-radius: 8px;
-    font-size: 1.5rem;
+    padding: 6px 14px;
+    border-radius: 40px;
+    font-size: 0.875rem;
     font-weight: bold;
+    color: #777;
 }
 
 .attendance__date {
     margin-top: 20px;
-    font-size: 1.2rem;
+    font-size: 1.5rem;
+    margin-left: 5vh;
 }
 
 .attendance__clock {
@@ -33,9 +36,9 @@
 .attendance__button {
     background-color: black;
     color: white;
-    padding: 15px 40px;
+    padding: 6px 38px;
     font-size: 1.2rem;
     border: none;
-    border-radius: 8px;
+    border-radius: 10px;
     cursor: pointer;
 }
