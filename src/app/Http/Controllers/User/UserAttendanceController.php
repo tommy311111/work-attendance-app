@@ -87,4 +87,9 @@ class UserAttendanceController extends Controller
 
         return redirect()->route('attendance.create');
     }
+
+    public function index()
+    {
+        return view('user.attendance.index');
+    }
 }
