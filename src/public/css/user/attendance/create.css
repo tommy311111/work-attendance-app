@@ -5,64 +5,112 @@
     flex-direction: column;
     align-items: center;
     margin-top: 0;
-    padding-top: 20vh;
+    padding-top: 10rem;
 }
 
 .attendance__status {
     background-color: #ccc;
-    padding: 6px 14px;
-    border-radius: 40px;
+    padding: 0.4rem 1rem;
+    border-radius: 2.5rem;
     font-size: 0.875rem;
     font-weight: bold;
     color: #777;
 }
 
 .attendance__date {
-    margin-top: 20px;
+    margin-top: 1.25rem;
     font-size: 1.5rem;
-    margin-left: 5vh;
+    padding-left: 2rem;
 }
 
 .attendance__clock {
-    margin-top: 10px;
+    margin-top: 0.75rem;
     font-size: 3rem;
     font-weight: bold;
 }
 
 .attendance__form {
-    margin-top: 30px;
+    margin-top: 2rem;
+}
+
+.attendance__button,
+.attendance__button--white {
+    padding: 0.5rem 2.5rem;
+    font-size: 1.2rem;
+    border: none;
+    border-radius: 0.625rem;
+    cursor: pointer;
 }
 
 .attendance__button {
     background-color: black;
     color: white;
-    padding: 6px 38px;
-    font-size: 1.2rem;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-}
-
-.attendance__button-group {
-    display: flex;
-    gap: 16px;
-    margin-top: 30px;
 }
 
 .attendance__button--white {
     background-color: white;
     color: black;
-    padding: 6px 38px;
-    font-size: 1.2rem;
-    border-radius: 10px;
-    cursor: pointer;
-    border: none;
+}
+
+.attendance__button-group {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
 }
 
 .attendance__message {
-    margin-top: 20px;
+    margin-top: 1.25rem;
     font-size: 1.2rem;
     color: #333;
     font-weight: bold;
+    padding-left: 1.5rem;
 }
 
+/* -----------------------------
+    レスポンシブ対応
+----------------------------- */
+
+@media (max-width: 850px) {
+    .attendance__content {
+        padding-top: 8rem;
+    }
+
+    .attendance__date {
+        font-size: 1.4rem;
+    }
+
+    .attendance__clock {
+        font-size: 2.5rem;
+    }
+
+    .attendance__button,
+    .attendance__button--white {
+        font-size: 1.1rem;
+        padding: 0.5rem 2rem;
+    }
+
+    .attendance__status {
+        font-size: 0.8rem;
+        padding: 0.3rem 0.8rem;
+    }
+}
+
+/* === PCサイズ微調整（1400px〜1540px） === */
+@media (max-width: 1540px) {
+    .attendance__content {
+        padding-top: 9rem;
+    }
+
+    .attendance__date {
+        font-size: 1.4rem;
+    }
+
+    .attendance__clock {
+        font-size: 2.8rem;
+    }
+
+    .attendance__button,
+    .attendance__button--white {
+        font-size: 1.15rem;
+    }
+}
