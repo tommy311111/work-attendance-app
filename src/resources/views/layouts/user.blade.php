@@ -12,7 +12,7 @@
 
     <header class="header">
         <h1 class="header__logo">
-            <a href="{{ route('attendance.show') }}">
+            <a href="{{ route('attendance.create') }}">
                 <img src="{{ asset('storage/images/logo.svg') }}" alt="COACHTECH">
             </a>
         </h1>

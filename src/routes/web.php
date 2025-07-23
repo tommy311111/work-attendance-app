@@ -28,7 +28,11 @@ Route::post('/email/verification-notification', function (Illuminate\Http\Reques
 })->middleware(['auth', 'throttle:6,1'])->name('verification.send');
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/attendance', [UserAttendanceController::class, 'show'])->name('attendance.show');
+    Route::get('/attendance', [UserAttendanceController::class, 'create'])->name('attendance.create');
     Route::post('/attendance/action', [UserAttendanceController::class, 'updateStatus'])->name('attendance.action');
 });
 
+Route::middleware(['auth'])->group(function () {
+    Route::get('/attendance/list', [UserAttendanceController::class, 'index'])->name('attendance.index'); // 一覧（現在の月）
+    Route::get('/attendance/{id}', [UserAttendanceController::class, 'show'])->name('attendance.show'); // 詳細（IDベース）
+});

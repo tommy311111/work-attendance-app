@@ -12,7 +12,7 @@ use App\Models\BreakTime;
 class UserAttendanceController extends Controller
 {
     // 勤怠画面の表示
-    public function show()
+    public function create()
     {
         $user = Auth::user();
         $today = Carbon::today();
@@ -79,12 +79,12 @@ class UserAttendanceController extends Controller
                 $attendance->status = Attendance::STATUS['FINISHED'];
                 $attendance->clock_out = now();
                 $attendance->save();
-                return redirect()->route('attendance.show');
+                return redirect()->route('attendance.create');
                 break;
         }
 
         $attendance->save();
 
-        return redirect()->route('attendance.show');
+        return redirect()->route('attendance.create');
     }
 }

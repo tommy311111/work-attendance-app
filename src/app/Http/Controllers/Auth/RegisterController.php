@@ -26,7 +26,7 @@ class RegisterController extends Controller
 
         Auth::login($user);
         event(new Registered($user));
-        return redirect()->route('attendance.show');//今回は勤怠登録画面
+        return redirect()->route('attendance.create');//今回は勤怠登録画面
     }
 
 }
