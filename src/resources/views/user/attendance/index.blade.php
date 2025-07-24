@@ -48,7 +48,7 @@
                 @endphp
                 <tr>
                     <td>{{ $date->format('m/d') }}({{ ['日','月','火','水','木','金','土'][$date->dayOfWeek] }})</td>
-                    <td>{{ $attendance->start_time ?? '-' }}</td>
+                    <td>{{ $attendance->clock_in ?? '-' }}</td>
                     <td>{{ $attendance->end_time ?? '-' }}</td>
                     <td>{{ $attendance->break_duration ?? '-' }}</td>
                     <td>{{ $attendance->total_duration ?? '-' }}</td>
