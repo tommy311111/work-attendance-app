@@ -1,0 +1,99 @@
+/* 全体の背景をグレーにする */
+.attendance-list__wrapper {
+    background-color: #f0f0f0;
+    min-height: 100vh;
+    padding: 2rem 0;
+}
+
+/* 中央寄せ + 幅80% */
+.attendance-list__content {
+    width: 60%;
+    margin: 0 auto;
+    padding: 2rem;
+    border-radius: 8px;
+    font-family: sans-serif;
+}
+
+
+.attendance-list__title::before {
+    content: "";
+    display: inline-block;
+    width: 4px;             /* 線の太さ */
+    height: 1.2em;          /* 線の高さ（文字の高さに合わせる） */
+    background-color: #333; /* 線の色 */
+    margin-right: 0.6rem;   /* テキストとの間隔 */
+    vertical-align: middle; /* テキストと縦線を中央揃えに */
+    border-radius: 2px;
+}
+
+.attendance-list__title {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    text-align: left;
+}
+
+.attendance-list__navigation {
+    background-color: #fff;
+    padding: 0.5rem 1rem;
+    display: flex;
+    justify-content: space-between; /* ← 両端に配置 */
+    align-items: center;
+    margin-bottom: 1.5rem;
+    border-radius: 8px;
+}
+
+.attendance-list__nav-link {
+    text-decoration: none;
+    font-weight: bold;
+    color: #888; /* グレーに */
+}
+
+.attendance-list__nav-icon {
+    font-size: 16px;         /* アイコンサイズ（テキストと揃える） */
+    margin: 0 0.4rem;
+    vertical-align: baseline;  /* middle → baseline に変更 */
+    line-height: 1;           /* 行の高さでずれないように */
+}
+
+.attendance-list__current-month {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #333;
+}
+
+.attendance-list__month-icon {
+    width: 20px;
+    height: 20px;
+    vertical-align: baseline;
+    line-height: 1;
+    margin-right: 0.5rem;
+}
+
+.attendance-list__table {
+    width: 100%;
+    background-color: #fff;
+    border-collapse: collapse;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.attendance-list__table th,
+.attendance-list__table td {
+    padding: 0.5rem;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+    color: #888;
+}
+
+/* thの下線だけ太く */
+.attendance-list__table thead th {
+    border-bottom: 2px solid #ddd;
+    font-weight: bold;
+}
+
+/* 「詳細」リンクだけ黒くする */
+.attendance-list__detail-link {
+    color: #000; /* 黒に上書き */
+    text-decoration: none;
+    font-weight: 500;
+}

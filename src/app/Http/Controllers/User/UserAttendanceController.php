@@ -88,8 +88,23 @@ class UserAttendanceController extends Controller
         return redirect()->route('attendance.create');
     }
 
-    public function index()
-    {
-        return view('user.attendance.index');
-    }
+    public function index(Request $request)
+{
+    $user = Auth::user();
+
+    // 表示対象の年月を取得（なければ今月）
+    $month = $request->input('month', Carbon::now()->format('Y-m'));
+    $parsedMonth = Carbon::createFromFormat('Y-m', $month);
+
+    $attendances = Attendance::where('user_id', $user->id)
+        ->where('date', 'like', "$month%")
+        ->orderBy('date', 'asc')
+        ->get();
+
+    return view('user.attendance.index', [
+        'attendances' => $attendances,
+        'currentMonth' => $parsedMonth,
+    ]);
+}
+
 }
