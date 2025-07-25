@@ -48,10 +48,27 @@
                 @endphp
                 <tr>
                     <td>{{ $date->format('m/d') }}({{ ['日','月','火','水','木','金','土'][$date->dayOfWeek] }})</td>
-                    <td>{{ $attendance->clock_in ?? '-' }}</td>
-                    <td>{{ $attendance->end_time ?? '-' }}</td>
-                    <td>{{ $attendance->break_duration ?? '-' }}</td>
-                    <td>{{ $attendance->total_duration ?? '-' }}</td>
+                    <td>
+    {{ $attendance->status === '勤務外' ? '-' : \Carbon\Carbon::parse($attendance->clock_in)->format('H:i') }}
+</td>
+<td>
+    {{ $attendance->status === '勤務外' ? '-' : \Carbon\Carbon::parse($attendance->end_time)->format('H:i') }}
+</td>
+
+
+                    <td>
+    {{ $attendance->break_start_at && $attendance->break_end_at
+        ? \Carbon\Carbon::parse($attendance->break_start_at)->diffInMinutes($attendance->break_end_at) . '分'
+        : '-' }}
+</td>
+<td>
+    {{ ($attendance->clock_in && $attendance->end_time)
+        ? \Carbon\Carbon::parse($attendance->end_time)->diffInMinutes($attendance->clock_in)
+            - (\Carbon\Carbon::parse($attendance->break_end_at)->diffInMinutes($attendance->break_start_at) ?? 0)
+        . '分'
+        : '-' }}
+</td>
+
                     <td>
                         <a href="{{ route('attendance.show', $attendance->id) }}" class="attendance-list__detail-link">詳細</a>
                     </td>
