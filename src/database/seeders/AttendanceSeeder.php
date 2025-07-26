@@ -39,7 +39,7 @@ class AttendanceSeeder extends Seeder
                     $temp->addDay();
                 }
 
-                $workDaysCount = min(4, count($weekDates));
+                $workDaysCount = min(5, count($weekDates));
                 $randomWorkDays = collect($weekDates)->random($workDaysCount)->all();
                 $workDays = array_merge($workDays, $randomWorkDays);
 
@@ -60,8 +60,6 @@ class AttendanceSeeder extends Seeder
                     'user_id' => $employee->id,
                     'date' => $dateStr,
                     'status' => $status,
-                    'clock_in' => $clockIn,
-                    'clock_out' => $clockOut,
                 ]);
 
                 if ($status !== '勤務外') {
