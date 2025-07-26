@@ -56,11 +56,11 @@
 </td>
 
 
-                    <td>
-    {{ $attendance->break_start_at && $attendance->break_end_at
-        ? \Carbon\Carbon::parse($attendance->break_start_at)->diffInMinutes($attendance->break_end_at) . '分'
-        : '-' }}
+    <td>
+    {{ $attendance->total_break_time_formatted }}
 </td>
+
+
 <td>
     {{ ($attendance->clock_in && $attendance->end_time)
         ? \Carbon\Carbon::parse($attendance->end_time)->diffInMinutes($attendance->clock_in)

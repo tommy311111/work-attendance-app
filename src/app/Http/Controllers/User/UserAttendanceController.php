@@ -96,7 +96,9 @@ class UserAttendanceController extends Controller
     $month = $request->input('month', Carbon::now()->format('Y-m'));
     $parsedMonth = Carbon::createFromFormat('Y-m', $month);
 
-    $attendances = Attendance::where('user_id', $user->id)
+    // 勤怠情報＋その休憩情報もまとめて取得
+    $attendances = Attendance::with('breaks') // ← ここ
+        ->where('user_id', $user->id)
         ->where('date', 'like', "$month%")
         ->orderBy('date', 'asc')
         ->get();
