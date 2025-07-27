@@ -58,12 +58,12 @@
                             {{ $attendance->total_break_time_formatted }}
                         </td>
                         <td>
-                            {{ ($attendance->clock_in && $attendance->end_time)
-                                ? \Carbon\Carbon::parse($attendance->end_time)->diffInMinutes($attendance->clock_in)
-                                    - (\Carbon\Carbon::parse($attendance->break_end_at)->diffInMinutes($attendance->break_start_at) ?? 0)
-                                    . '分'
-                                : '-' }}
-                        </td>
+    {{ $attendance->work_duration_formatted !== '-' ? $attendance->work_duration_formatted : '' }}
+
+</td>
+
+
+
                         <td>
                             <a href="{{ route('attendance.show', $attendance->id) }}" class="attendance-list__detail-link">詳細</a>
                         </td>

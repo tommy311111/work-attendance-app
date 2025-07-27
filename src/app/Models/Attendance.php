@@ -57,4 +57,39 @@ class Attendance extends Model
 
     return $hours . ':' . sprintf('%02d', $minutes);
 }
+
+    public function getWorkDurationFormattedAttribute()
+{
+    if (! $this->clock_in || ! $this->clock_out) {
+        return null;
+    }
+
+    // 出勤・退勤の差（分）
+    $start = Carbon::parse($this->clock_in);
+    $end = Carbon::parse($this->clock_out);
+    $totalWorkMinutes = $end->diffInMinutes($start);
+
+    // 休憩合計（分）
+    $totalBreakMinutes = $this->breaks->sum(function ($break) {
+        if ($break->break_start_at && $break->break_end_at) {
+            $start = Carbon::parse($break->break_start_at);
+            $end = Carbon::parse($break->break_end_at);
+            return $end->diffInMinutes($start);
+        }
+        return 0;
+    });
+
+    // 実働時間（分）
+    $actualMinutes = $totalWorkMinutes - $totalBreakMinutes;
+
+    if ($actualMinutes <= 0) {
+        return null;
+    }
+
+    // 分 → 時:分 形式に整形（例: 1:05）
+    $hours = floor($actualMinutes / 60);
+    $minutes = $actualMinutes % 60;
+
+    return sprintf('%d:%02d', $hours, $minutes);
+}
 }

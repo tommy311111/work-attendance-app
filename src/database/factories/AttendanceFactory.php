@@ -3,7 +3,9 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use App\Models\User;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
+
 
 class AttendanceFactory extends Factory
 {
@@ -13,15 +15,33 @@ class AttendanceFactory extends Factory
      * @return array
      */
     public function definition()
-    {
-        $clockIn = $this->faker->dateTimeBetween('09:00:00', '09:30:00');
-        $clockOut = (clone $clockIn)->modify('+8 hours');
+{
+    $dateInput = $this->faker->dateTimeBetween('2025-07-01', '2025-09-30');
+    $carbonDate = Carbon::parse($dateInput);
 
+    // デフォルトの状態は「出勤」でセット（clock_in, clock_out付き）
+    $clockIn = Carbon::createFromTime(9, rand(0, 30));
+    $clockOut = (clone $clockIn)->addHours(8);
+
+    return [
+        'date' => $carbonDate->format('Y-m-d'),
+        'clock_in' => $clockIn,
+        'clock_out' => $clockOut,
+        'status' => '出勤',
+    ];
+}
+
+// 勤務外状態のstateメソッドを用意
+public function offWork()
+{
+    return $this->state(function (array $attributes) {
         return [
-            'user_id' => User::factory(),
-            'date' => $this->faker->dateTimeBetween('2025-04-01', '2025-09-30')->format('Y-m-d'),
-            'clock_in' => $clockIn,
-            'clock_out' => $clockOut,
+            'clock_in' => null,
+            'clock_out' => null,
+            'status' => '勤務外',
         ];
-    }
+    });
+}
+
+
 }
