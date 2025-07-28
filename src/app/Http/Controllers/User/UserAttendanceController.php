@@ -108,5 +108,10 @@ class UserAttendanceController extends Controller
         'currentMonth' => $parsedMonth,
     ]);
 }
+    // 勤怠画面の表示
+    public function show()
+    {
 
+        return view('user.attendance.show');
+    }
 }
