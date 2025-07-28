@@ -49,7 +49,7 @@ class Attendance extends Model
     }
 
     if ($totalMinutes <= 0) {
-        return '-';
+        return '';
     }
 
     $hours = floor($totalMinutes / 60);

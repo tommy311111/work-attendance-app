@@ -1,29 +1,26 @@
-/* 全体の背景をグレーにする */
 .attendance-list__wrapper {
     background-color: #f0f0f0;
     min-height: 100vh;
     padding: 2rem 0;
 }
 
-/* 中央寄せ + 幅80% */
 .attendance-list__content {
     width: 60%;
     margin: 0 auto;
     padding: 2rem;
-    border-radius: 8px;
+    border-radius: 0.5rem;
     font-family: sans-serif;
 }
-
 
 .attendance-list__title::before {
     content: "";
     display: inline-block;
-    width: 4px;             /* 線の太さ */
-    height: 1.2em;          /* 線の高さ（文字の高さに合わせる） */
-    background-color: #333; /* 線の色 */
-    margin-right: 0.6rem;   /* テキストとの間隔 */
-    vertical-align: middle; /* テキストと縦線を中央揃えに */
-    border-radius: 2px;
+    width: 0.25rem;
+    height: 1.2em;
+    background-color: #333;
+    margin-right: 0.6rem;
+    vertical-align: middle;
+    border-radius: 0.125rem;
 }
 
 .attendance-list__title {
@@ -36,23 +33,23 @@
     background-color: #fff;
     padding: 0.5rem 1rem;
     display: flex;
-    justify-content: space-between; /* ← 両端に配置 */
+    justify-content: space-between;
     align-items: center;
     margin-bottom: 1.5rem;
-    border-radius: 8px;
+    border-radius: 0.5rem;
 }
 
 .attendance-list__nav-link {
     text-decoration: none;
     font-weight: bold;
-    color: #888; /* グレーに */
+    color: #888;
 }
 
 .attendance-list__nav-icon {
-    font-size: 16px;         /* アイコンサイズ（テキストと揃える） */
+    font-size: 1rem;
     margin: 0 0.4rem;
-    vertical-align: baseline;  /* middle → baseline に変更 */
-    line-height: 1;           /* 行の高さでずれないように */
+    vertical-align: baseline;
+    line-height: 1;
 }
 
 .attendance-list__current-month {
@@ -62,8 +59,8 @@
 }
 
 .attendance-list__month-icon {
-    width: 20px;
-    height: 20px;
+    width: 1.25rem;
+    height: 1.25rem;
     vertical-align: baseline;
     line-height: 1;
     margin-right: 0.5rem;
@@ -73,7 +70,7 @@
     width: 100%;
     background-color: #fff;
     border-collapse: collapse;
-    border-radius: 8px;
+    border-radius: 0.5rem;
     overflow: hidden;
 }
 
@@ -85,15 +82,75 @@
     color: #888;
 }
 
-/* thの下線だけ太く */
 .attendance-list__table thead th {
     border-bottom: 2px solid #ddd;
     font-weight: bold;
 }
 
-/* 「詳細」リンクだけ黒くする */
 .attendance-list__detail-link {
-    color: #000; /* 黒に上書き */
+    color: #000;
     text-decoration: none;
     font-weight: 500;
 }
+
+/* -----------------------------
+    レスポンシブ対応
+----------------------------- */
+
+/* PC（1400px〜1540px）向け微調整 */
+@media (min-width: 1400px) and (max-width: 1540px) {
+    .attendance-list__content {
+        width: 65%;
+        padding: 2rem 3rem;
+    }
+
+    .attendance-list__title {
+        font-size: 1.6rem;
+    }
+
+    .attendance-list__current-month {
+        font-size: 1.3rem;
+    }
+}
+
+/* タブレット（768px〜850px）対応 */
+@media (min-width: 768px) and (max-width: 850px) {
+    .attendance-list__content {
+        width: 95%;
+        padding: 1rem;
+    }
+
+    .attendance-list__navigation {
+        flex-direction: row;
+        justify-content: space-between;
+        flex-wrap: nowrap;
+        gap: 0;
+        padding: 0.5rem 0.75rem;
+    }
+
+    .attendance-list__nav-link {
+        font-size: 0.85rem;
+    }
+
+    .attendance-list__nav-icon {
+        font-size: 0.9rem;
+    }
+
+    .attendance-list__current-month {
+        font-size: 1rem;
+        white-space: nowrap;
+    }
+
+    .attendance-list__month-icon {
+        width: 1rem;
+        height: 1rem;
+        margin-right: 0.3rem;
+    }
+
+    .attendance-list__table th,
+    .attendance-list__table td {
+        font-size: 0.85rem;
+        padding: 0.4rem;
+    }
+}
+
