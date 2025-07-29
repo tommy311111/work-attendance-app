@@ -8,6 +8,9 @@ use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\Http\Controllers\Controller;
 use App\Models\BreakTime;
+use App\Models\AttendanceRequest;
+use App\Models\AttendanceRequestBreak;
+use App\Http\Requests\AttendanceUpdateRequest;
 
 class UserAttendanceController extends Controller
 {
@@ -109,9 +112,50 @@ class UserAttendanceController extends Controller
     ]);
 }
     // 勤怠画面の表示
-    public function show()
+    public function show($id)
     {
-
-        return view('user.attendance.show');
+        $attendance = Attendance::findOrFail($id);
+        $breaks = $attendance->breaks;
+        $user = $attendance->user;
+    return view('user.attendance.show', compact('attendance','user','breaks'));
     }
+
+    public function requestUpdate(AttendanceUpdateRequest $request, $id)
+{
+    $attendance = Attendance::with('breaks')->findOrFail($id);
+
+    if ($attendance->user_id !== Auth::id()) {
+        abort(403);
+    }
+
+    // 1. 勤怠修正申請の保存
+    $attendanceRequest = AttendanceRequest::create([
+        'user_id' => Auth::id(),
+        'attendance_id' => $attendance->id,
+        'request_type' => 'edit', // 種類を分けたいなら柔軟に
+        'requested_clock_in_time' => $request->clock_in,
+        'requested_clock_out_time' => $request->clock_out,
+        'reason' => $request->remarks,
+        'status' => 'pending',
+        'reviewed_by' => null,
+        'reviewed_at' => null,
+    ]);
+
+    // 2. 修正された休憩の登録（break_id を指定して登録）
+    if (!empty($request->breaks)) {
+        foreach ($request->breaks as $breakInput) {
+            if (!empty($breakInput['id']) && (!empty($breakInput['break_start']) || !empty($breakInput['break_end']))) {
+                AttendanceRequestBreak::create([
+                    'attendance_request_id' => $attendanceRequest->id,
+                    'break_id' => $breakInput['id'],
+                    'requested_start_time' => $breakInput['break_start'],
+                    'requested_end_time' => $breakInput['break_end'],
+                ]);
+            }
+        }
+    }
+
+    return redirect()->route('user.attendance.show', $attendance->id)
+        ->with('success', '修正申請を送信しました。');
+}
 }

@@ -35,4 +35,5 @@ Route::middleware(['auth', 'verified'])->group(function () {
 Route::middleware(['auth'])->group(function () {
     Route::get('/attendance/list', [UserAttendanceController::class, 'index'])->name('attendance.index'); // 一覧（現在の月）
     Route::get('/attendance/{id}', [UserAttendanceController::class, 'show'])->name('attendance.show'); // 詳細（IDベース）
+    Route::post('/attendance/{id}/request', [AttendanceController::class, 'requestUpdate'])->name('attendances.request');
 });
