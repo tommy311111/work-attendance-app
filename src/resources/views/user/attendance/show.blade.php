@@ -26,7 +26,7 @@
                 <th>出勤・退勤</th>
                 <td>
                     <input type="time" name="clock_in" value="{{ old('clock_in', \Carbon\Carbon::parse($attendance->clock_in)->format('H:i')) }}">
-                    〜
+                    <span class="time-separator">〜</span>
                     <input type="time" name="clock_out" value="{{ old('clock_out', \Carbon\Carbon::parse($attendance->clock_out)->format('H:i')) }}">
                     @error('clock_in')<div class="error">{{ $message }}</div>@enderror
                     @error('clock_out')<div class="error">{{ $message }}</div>@enderror
@@ -38,7 +38,7 @@
                     <td>
                         <input type="hidden" name="breaks[{{ $i }}][id]" value="{{ $break->id }}">
                         <input type="time" name="breaks[{{ $i }}][break_start]" value="{{ old("breaks.$i.break_start", \Carbon\Carbon::parse($break->break_start)->format('H:i')) }}">
-                        〜
+                        <span class="time-separator">〜</span>
                         <input type="time" name="breaks[{{ $i }}][break_end]" value="{{ old("breaks.$i.break_end", \Carbon\Carbon::parse($break->break_end)->format('H:i')) }}">
                         @error("breaks.$i.break_start")<div class="error">{{ $message }}</div>@enderror
                         @error("breaks.$i.break_end")<div class="error">{{ $message }}</div>@enderror
@@ -51,7 +51,7 @@
                 <td>
                     <input type="hidden" name="breaks[{{ count($breaks) }}][id]" value="">
                     <input type="time" name="breaks[{{ count($breaks) }}][break_start]" value="">
-                    〜
+                    <span class="time-separator">〜</span>
                     <input type="time" name="breaks[{{ count($breaks) }}][break_end]" value="">
                 </td>
             </tr>
@@ -65,8 +65,15 @@
         </table>
 
         <div class="attendance-detail__submit">
-            <button type="submit">修正申請</button>
-        </div>
+    @if (!$isPendingApproval)
+        <button type="submit">修正</button>
+    @else
+        <p class="attendance-detail__notice">
+            ※承認待ちのため修正は出来ません。
+        </p>
+    @endif
+</div>
+
     </form>
 </div>
 @endsection
