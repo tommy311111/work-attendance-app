@@ -120,7 +120,6 @@ class UserAttendanceController extends Controller
         // 修正申請が「承認待ち」のものがあるか判定
     $isPendingApproval = $attendance->attendanceRequests()->where('status', 'pending')->exists();
 
-
     return view('user.attendance.show', compact('attendance','user','breaks','isPendingApproval'));
     }
 
