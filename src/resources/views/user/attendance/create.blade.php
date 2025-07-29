@@ -29,17 +29,18 @@
             </form>
 
         @elseif ($attendance->status === '出勤中' && !$attendance->on_break)
-            <form method="POST" action="{{ route('attendance.action') }}" style="display: inline-block; margin-right: 10px;">
-                @csrf
-                <input type="hidden" name="action" value="end_work">
-                <button type="submit" class="attendance__button">退勤</button>
-            </form>
+            <form method="POST" action="{{ route('attendance.action') }}" class="attendance__form-inline attendance__form-inline--margin-right">
+    @csrf
+    <input type="hidden" name="action" value="end_work">
+    <button type="submit" class="attendance__button">退勤</button>
+</form>
 
-            <form method="POST" action="{{ route('attendance.action') }}" style="display: inline-block;">
-                @csrf
-                <input type="hidden" name="action" value="start_break">
-                <button type="submit" class="attendance__button--white">休憩入</button>
-            </form>
+<form method="POST" action="{{ route('attendance.action') }}" class="attendance__form-inline">
+    @csrf
+    <input type="hidden" name="action" value="start_break">
+    <button type="submit" class="attendance__button--white">休憩入</button>
+</form>
+
 
         @elseif ($attendance->status === '休憩中')
             <form method="POST" action="{{ route('attendance.action') }}">

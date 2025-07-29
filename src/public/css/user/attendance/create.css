@@ -33,6 +33,14 @@
     margin-top: 2rem;
 }
 
+.attendance__form-inline {
+    display: inline-block;
+}
+
+.attendance__form-inline--margin-right {
+    margin-right: 10px;
+}
+
 .attendance__button,
 .attendance__button--white {
     padding: 0.5rem 2.5rem;
