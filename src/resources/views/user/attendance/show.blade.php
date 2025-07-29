@@ -14,14 +14,21 @@
         <table class="attendance-detail__table">
             <tr>
                 <th>名前</th>
-                <td class="attendance-detail__text">{{ $user->name }}</td>
+                <td class="attendance-detail__text attendance-detail__text--slightly-left">
+    {{ str_replace(' ', '　', $user->name) }}
+</td>
+
             </tr>
             <tr>
-                <th>日付</th>
-                <td class="attendance-detail__text">
-                    {{ \Carbon\Carbon::parse($attendance->date)->format('Y年n月j日') }}
-                </td>
-            </tr>
+    <th>日付</th>
+    <td class="attendance-detail__text">
+        {{ \Carbon\Carbon::parse($attendance->date)->format('Y年') }}
+        <span style="display:inline-block; width:5.7rem;"></span>
+        {{ \Carbon\Carbon::parse($attendance->date)->format('n月 j日') }}
+    </td>
+</tr>
+
+
             <tr>
                 <th>出勤・退勤</th>
                 <td>
