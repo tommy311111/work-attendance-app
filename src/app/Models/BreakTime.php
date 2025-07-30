@@ -24,4 +24,9 @@ class BreakTime extends Model
         return $this->hasMany(AttendanceRequestBreak::class);
     }
 
+    protected $casts = [
+    'break_start_at' => 'datetime',
+    'break_end_at' => 'datetime',
+];
+
 }

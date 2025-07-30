@@ -92,4 +92,11 @@ class Attendance extends Model
 
     return sprintf('%d:%02d', $hours, $minutes);
 }
+
+    protected $casts = [
+        'date' => 'date',
+        'clock_in' => 'datetime',
+    'clock_out' => 'datetime',
+    ];
+
 }

@@ -32,9 +32,9 @@
             <tr>
                 <th>出勤・退勤</th>
                 <td>
-                    <input type="time" name="clock_in" value="{{ old('clock_in', \Carbon\Carbon::parse($attendance->clock_in)->format('H:i')) }}">
+                    <input type="time" name="clock_in" value="{{ old('clock_in', $attendance->clock_in ? $attendance->clock_in->format('H:i') : '') }}">
                     <span class="time-separator">〜</span>
-                    <input type="time" name="clock_out" value="{{ old('clock_out', \Carbon\Carbon::parse($attendance->clock_out)->format('H:i')) }}">
+                    <input type="time" name="clock_out" value="{{ old('clock_out', $attendance->clock_out ? $attendance->clock_out->format('H:i') : '') }}">
                     @error('clock_in')<div class="error">{{ $message }}</div>@enderror
                     @error('clock_out')<div class="error">{{ $message }}</div>@enderror
                 </td>
@@ -43,15 +43,27 @@
                 <tr>
                     <th>{{ $i === 0 ? '休憩' : '休憩' . ($i + 1) }}</th>
                     <td>
-                        <input type="hidden" name="breaks[{{ $i }}][id]" value="{{ $break->id }}">
-                        <input type="time" name="breaks[{{ $i }}][break_start]"
-        value="{{ old("breaks.$i.break_start", $break->break_start_at ? \Carbon\Carbon::parse($break->break_start_at)->format('H:i') : '') }}">
-                        <span class="time-separator">〜</span>
-                        <input type="time" name="breaks[{{ $i }}][break_end]"
-        value="{{ old("breaks.$i.break_end", $break->break_end_at ? \Carbon\Carbon::parse($break->break_end_at)->format('H:i') : '') }}">
-                        @error("breaks.$i.break_start")<div class="error">{{ $message }}</div>@enderror
-                        @error("breaks.$i.break_end")<div class="error">{{ $message }}</div>@enderror
-                    </td>
+    <input type="hidden" name="breaks[{{ $i }}][id]" value="{{ $break->id }}">
+
+    <input type="time" name="breaks[{{ $i }}][break_start]"
+    value="{{ old("breaks.$i.break_start", optional($break->break_start_at)->format('H:i')) }}">
+
+
+    <span class="time-separator">〜</span>
+
+    <input type="time" name="breaks[{{ $i }}][break_end]"
+        value="{{ old("breaks.$i.break_end", $break->break_end_at ? $break->break_end_at->format('H:i') : '') }}">
+
+    @error("breaks.$i.break_start")
+        <div class="error">{{ $message }}</div>
+    @enderror
+
+    @error("breaks.$i.break_end")
+        <div class="error">{{ $message }}</div>
+    @enderror
+</td>
+
+
                 </tr>
             @endforeach
             {{-- 空の休憩入力欄1つ --}}

@@ -117,13 +117,15 @@ class UserAttendanceController extends Controller
         $attendance = Attendance::findOrFail($id);
         $breaks = $attendance->breaks;
         $user = $attendance->user;
+
         // 修正申請が「承認待ち」のものがあるか判定
     $isPendingApproval = $attendance->attendanceRequests()->where('status', 'pending')->exists();
 
     return view('user.attendance.show', compact('attendance','user','breaks','isPendingApproval'));
     }
 
-    public function requestUpdate(AttendanceUpdateRequest $request, $id)
+
+public function requestUpdate(AttendanceUpdateRequest $request, $id)
 {
     $attendance = Attendance::with('breaks')->findOrFail($id);
 
@@ -131,28 +133,36 @@ class UserAttendanceController extends Controller
         abort(403);
     }
 
-    // 1. 勤怠修正申請の保存
+    // 日付と入力時刻を組み合わせて datetime に変換
+    $date = $attendance->date->format('Y-m-d'); // モデルに date:cast があれば Carbon として使える
+
+    $clockIn = $request->clock_in ? Carbon::createFromFormat('Y-m-d H:i', $date . ' ' . $request->clock_in) : null;
+    $clockOut = $request->clock_out ? Carbon::createFromFormat('Y-m-d H:i', $date . ' ' . $request->clock_out) : null;
+
     $attendanceRequest = AttendanceRequest::create([
         'user_id' => Auth::id(),
         'attendance_id' => $attendance->id,
-        'request_type' => 'edit', // 種類を分けたいなら柔軟に
-        'requested_clock_in_time' => $request->clock_in,
-        'requested_clock_out_time' => $request->clock_out,
+        'request_type' => 'edit',
+        'requested_clock_in_time' => $clockIn,
+        'requested_clock_out_time' => $clockOut,
         'reason' => $request->remarks,
         'status' => 'pending',
         'reviewed_by' => null,
         'reviewed_at' => null,
     ]);
 
-    // 2. 修正された休憩の登録（break_id を指定して登録）
     if (!empty($request->breaks)) {
         foreach ($request->breaks as $breakInput) {
             if (!empty($breakInput['id']) && (!empty($breakInput['break_start']) || !empty($breakInput['break_end']))) {
                 AttendanceRequestBreak::create([
                     'attendance_request_id' => $attendanceRequest->id,
                     'break_id' => $breakInput['id'],
-                    'requested_start_time' => $breakInput['break_start'],
-                    'requested_end_time' => $breakInput['break_end'],
+                    'requested_start_time' => !empty($breakInput['break_start'])
+                        ? Carbon::createFromFormat('Y-m-d H:i', $date . ' ' . $breakInput['break_start'])
+                        : null,
+                    'requested_end_time' => !empty($breakInput['break_end'])
+                        ? Carbon::createFromFormat('Y-m-d H:i', $date . ' ' . $breakInput['break_end'])
+                        : null,
                 ]);
             }
         }
@@ -161,4 +171,5 @@ class UserAttendanceController extends Controller
     return redirect()->route('user.attendance.show', $attendance->id)
         ->with('success', '修正申請を送信しました。');
 }
+
 }

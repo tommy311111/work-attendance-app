@@ -4,7 +4,7 @@ body {
 }
 
 .attendance-detail__wrapper {
-    width: 60%;
+    width: 50%;
     margin: 1rem auto;
     background-color: #f0f0f0;
     padding: 1rem;
@@ -39,10 +39,7 @@ body {
     border-bottom: 3px solid #f0f0f0;
 }
 
-.attendance-detail__table td.attendance-detail__text--slightly-left {
-    text-align: left;
-    padding-left: 11rem;
-}
+
 
 .attendance-detail__table th {
     text-align: center;
