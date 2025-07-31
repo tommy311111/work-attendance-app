@@ -118,15 +118,21 @@ class UserAttendanceController extends Controller
         $breaks = $attendance->breaks;
         $user = $attendance->user;
 
+
         // 修正申請が「承認待ち」のものがあるか判定
     $isPendingApproval = $attendance->attendanceRequests()->where('status', 'pending')->exists();
 
-    return view('user.attendance.show', compact('attendance','user','breaks','isPendingApproval'));
+    if ($isPendingApproval) {
+        return view('user.attendance.request_pending', compact('attendance', 'user', 'breaks'));
+    } else {
+        return view('user.attendance.show', compact('attendance', 'user', 'breaks'));
+    }
     }
 
 
 public function requestUpdate(AttendanceUpdateRequest $request, $id)
 {
+
     $attendance = Attendance::with('breaks')->findOrFail($id);
 
     if ($attendance->user_id !== Auth::id()) {
@@ -145,7 +151,7 @@ public function requestUpdate(AttendanceUpdateRequest $request, $id)
         'request_type' => 'edit',
         'requested_clock_in_time' => $clockIn,
         'requested_clock_out_time' => $clockOut,
-        'reason' => $request->remarks,
+        'reason' => $request->reason,
         'status' => 'pending',
         'reviewed_by' => null,
         'reviewed_at' => null,
@@ -168,8 +174,17 @@ public function requestUpdate(AttendanceUpdateRequest $request, $id)
         }
     }
 
-    return redirect()->route('user.attendance.show', $attendance->id)
+    return redirect()->route('attendances.request.edit', $attendance->id)
         ->with('success', '修正申請を送信しました。');
+}
+
+public function editRequest($id)
+{
+    $attendance = Attendance::findOrFail($id);
+    $user = $attendance->user;
+$breaks = $attendance->breaks;
+
+    return view('user.attendance.request_pending', compact('attendance', 'user', 'breaks'));
 }
 
 }

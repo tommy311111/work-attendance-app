@@ -9,8 +9,7 @@
     <h2 class="attendance-detail__title">勤怠詳細</h2>
 
     <form action="{{ route('attendances.request', $attendance->id) }}" method="POST">
-        @csrf
-
+@csrf
         <table class="attendance-detail__table">
             <tr>
                 <th>名前</th>
@@ -79,20 +78,17 @@
             <tr>
                 <th>備考</th>
                 <td>
-                    <textarea name="remarks" rows="3">{{ old('remarks', $attendance->remarks) }}</textarea>
-                    @error('remarks')<div class="error">{{ $message }}</div>@enderror
+                    <textarea name="reason" rows="3">{{ old('reason', $attendance->reason) }}</textarea>
+                    @error('reason')<div class="error">{{ $message }}</div>@enderror
                 </td>
             </tr>
         </table>
 
         <div class="attendance-detail__submit">
-    @if (!$isPendingApproval)
+   
         <button type="submit">修正</button>
-    @else
-        <p class="attendance-detail__notice">
-            ※承認待ちのため修正は出来ません。
-        </p>
-    @endif
+    
+  
 </div>
 
     </form>

@@ -63,8 +63,8 @@ class AttendanceUpdateRequest extends FormRequest
         }
 
         // 備考欄チェック
-        if (!isset($data['remarks']) || trim($data['remarks']) === '') {
-            $validator->errors()->add('remarks', '備考を記入してください');
+        if (!isset($data['reason']) || trim($data['reason']) === '') {
+            $validator->errors()->add('reason', '備考を記入してください');
         }
     });
 }
