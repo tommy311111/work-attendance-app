@@ -45,6 +45,7 @@ class AttendanceUpdateRequest extends FormRequest
         // 出退勤チェック
         if ($clockIn && $clockOut && $clockIn > $clockOut) {
             $validator->errors()->add('clock_in', '出勤時間もしくは退勤時間が不適切な値です');
+             return; // ←ここで休憩チェックをスキップ
         }
 
         // 休憩時間チェック
