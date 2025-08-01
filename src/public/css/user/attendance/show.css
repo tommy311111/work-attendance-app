@@ -103,3 +103,57 @@ textarea {
     font-weight: normal;
 }
 
+/* -----------------------------
+    レスポンシブ対応
+----------------------------- */
+
+/* PCサイズ（1400px〜1540px） */
+@media (min-width: 87.5rem) and (max-width: 96.25rem) {
+    .attendance-detail__wrapper {
+        width: 50%;
+        padding: 1.5rem;
+    }
+
+    .attendance-detail__title {
+        font-size: 1.6rem;
+    }
+
+    .attendance-detail__table th,
+    .attendance-detail__table td {
+        padding: 1rem;
+        font-size: 1rem;
+    }
+
+    .attendance-detail__submit button {
+        font-size: 1.1rem;
+        padding: 0.5rem 2.5rem;
+    }
+}
+
+/* タブレットサイズ（768px〜850px） */
+@media (min-width: 48rem) and (max-width: 53.125rem) {
+    .attendance-detail__wrapper {
+        width: 60%;
+        padding: 1rem;
+    }
+
+    .attendance-detail__title {
+        font-size: 1.4rem;
+        text-align: left;
+    }
+
+    .attendance-detail__table th,
+    .attendance-detail__table td {
+        padding: 0.5rem;
+        font-size: 0.9rem;
+    }
+
+    .attendance-detail__submit {
+        text-align: center;
+    }
+
+    .attendance-detail__submit button {
+        font-size: 1rem;
+        padding: 0.4rem 2rem;
+    }
+}
