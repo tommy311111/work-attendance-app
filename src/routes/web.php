@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use App\Http\Controllers\User\UserAttendanceController;
+use App\Http\Controllers\User\UserRequestController;
 
 Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register.form');
 Route::post('/register', [RegisterController::class, 'register'])->name('register');
@@ -33,9 +34,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
 });
 
 Route::middleware(['auth'])->group(function () {
-    Route::get('/attendance/list', [UserAttendanceController::class, 'index'])->name('attendance.index'); // 一覧（現在の月）
-    Route::get('/attendance/{id}/request/edit', [UserAttendanceController::class, 'editRequest'])->name('attendances.request.edit');
-    Route::post('/attendance/{id}/request', [UserAttendanceController::class, 'requestUpdate'])->name('attendances.request');
-    Route::get('/attendance/{id}', [UserAttendanceController::class, 'show'])->name('attendance.show'); // 詳細（IDベース）
+    // 勤怠一覧・詳細
+    Route::get('/attendance/list', [UserAttendanceController::class, 'index'])->name('attendance.index');
+    Route::get('/attendance/{id}', [UserAttendanceController::class, 'show'])->name('attendance.show');
 
+    // 勤怠修正申請
+    Route::get('/attendance-requests/{id}/edit', [UserRequestController::class, 'editRequest'])->name('attendance-requests.edit');
+    Route::post('/attendance-requests/{id}', [UserRequestController::class, 'storeRequest'])->name('attendance-requests.store');
 });
+

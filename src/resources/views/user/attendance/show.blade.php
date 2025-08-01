@@ -8,7 +8,7 @@
 <div class="attendance-detail__wrapper">
     <h2 class="attendance-detail__title">勤怠詳細</h2>
 
-    <form action="{{ route('attendances.request', $attendance->id) }}" method="POST">
+    <form action="{{ route('attendance-requests.store', $attendance->id) }}" method="POST">
 @csrf
         <table class="attendance-detail__table">
             <tr>
