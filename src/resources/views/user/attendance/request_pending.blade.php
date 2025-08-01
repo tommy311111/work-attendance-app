@@ -7,10 +7,7 @@
 @section('content')
 <div class="attendance-detail__wrapper">
     <h2 class="attendance-detail__title">勤怠詳細</h2>
-
-    <form action="{{ route('attendances.request.edit', $attendance->id) }}" method="GET">
-    
-
+<form action="{{ route('attendances.request.edit', $attendance->id) }}" method="GET">
         <table class="attendance-detail__table">
             <tr>
                 <th>名前</th>
@@ -32,21 +29,23 @@
             <!-- 出勤・退勤 -->
 <tr>
     <th>出勤・退勤</th>
-    <td class="attendance-detail__text">
-        {{ $attendance->clock_in ? $attendance->clock_in->format('H:i') : '未入力' }}
-        <span class="time-separator">〜</span>
-        {{ $attendance->clock_out ? $attendance->clock_out->format('H:i') : '未入力' }}
-    </td>
+<td class="attendance-detail__text">
+    {{ $attendance->requested_clock_in_time ? \Carbon\Carbon::parse($attendance->requested_clock_in_time)->format('H:i') : '未入力' }}
+    <span class="time-separator">〜</span>
+    {{ $attendance->requested_clock_out_time ? \Carbon\Carbon::parse($attendance->requested_clock_out_time)->format('H:i') : '未入力' }}
+</td>
+
 </tr>
 
             @foreach($breaks as $i => $break)
 <tr>
     <th>{{ $i === 0 ? '休憩' : '休憩' . ($i + 1) }}</th>
-    <td class="attendance-detail__text">
-        {{ optional($break->break_start_at)->format('H:i') ?? '未入力' }}
-        <span class="time-separator">〜</span>
-        {{ optional($break->break_end_at)->format('H:i') ?? '未入力' }}
-    </td>
+<td class="attendance-detail__text">
+    {{ optional($break->requested_start_time)->format('H:i') ?? '未入力' }}
+    <span class="time-separator">〜</span>
+    {{ optional($break->requested_end_time)->format('H:i') ?? '未入力' }}
+</td>
+
 </tr>
 @endforeach
 
@@ -61,11 +60,9 @@
 
         <div class="attendance-detail__submit">
     <p class="attendance-detail__notice">
-        ※承認待ちのため修正はできません。
+        *承認待ちのため修正はできません。
     </p>
 </div>
-
-
-    </form>
+</form>
 </div>
 @endsection

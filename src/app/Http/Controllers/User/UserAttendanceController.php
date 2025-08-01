@@ -174,17 +174,19 @@ public function requestUpdate(AttendanceUpdateRequest $request, $id)
         }
     }
 
-    return redirect()->route('attendances.request.edit', $attendance->id)
+    return redirect()->route('attendances.request.edit', $attendanceRequest->id)
         ->with('success', '修正申請を送信しました。');
 }
 
 public function editRequest($id)
 {
-    $attendance = Attendance::findOrFail($id);
-    $user = $attendance->user;
-$breaks = $attendance->breaks;
+    $attendance = AttendanceRequest::with('attendanceRequestBreaks', 'user')->findOrFail($id);
+
+    $user = $attendance->user;  // AttendanceRequest に紐づく User モデル（例: 申請者）
+    $breaks = $attendance->attendanceRequestBreaks;  // 関連する休憩時間の修正データ
 
     return view('user.attendance.request_pending', compact('attendance', 'user', 'breaks'));
 }
+
 
 }

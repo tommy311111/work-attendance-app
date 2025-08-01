@@ -100,7 +100,6 @@ textarea {
 
 .attendance-detail__notice {
     color: red;
-    font-weight: bold;
-    margin-top: 1rem;
+    font-weight: normal;
 }
 

@@ -22,4 +22,10 @@ class AttendanceRequestBreak extends Model
     {
     return $this->belongsTo(BreakTime::class);
     }
+
+    protected $casts = [
+    'requested_start_time' => 'datetime',
+    'requested_end_time' => 'datetime',
+];
+
 }
