@@ -41,5 +41,8 @@ Route::middleware(['auth'])->group(function () {
     // 勤怠修正申請
     Route::get('/attendance-requests/{id}/edit', [UserRequestController::class, 'editRequest'])->name('attendance-requests.edit');
     Route::post('/attendance-requests/{id}', [UserRequestController::class, 'storeRequest'])->name('attendance-requests.store');
+
+    //修正申請一覧
+    Route::get('/stamp_correction_request/list', [UserRequestController::class, 'index'])->name('attendance_requests.index');
 });
 

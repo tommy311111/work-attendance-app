@@ -70,4 +70,14 @@ public function editRequest($id)
 
     return view('user.attendance.request_pending', compact('attendance', 'user', 'breaks'));
 }
+
+public function index()
+    {
+        // ログインユーザーの申請一覧を取得（申請種別が勤怠修正のもの）
+        $requests = AttendanceRequest::where('user_id', Auth::id())
+                    ->latest()
+                    ->paginate(10);
+
+        return view('user.request.index', compact('requests'));
+    }
 }
