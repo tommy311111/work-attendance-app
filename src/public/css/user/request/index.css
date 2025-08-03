@@ -1,0 +1,81 @@
+body {
+    background-color: #f0f0f0;
+    font-family: sans-serif;
+}
+
+.request-list__wrapper {
+    width: 60%;
+    margin: 1rem auto;
+    background-color: #f0f0f0;
+    padding: 1rem;
+}
+
+.request-list__title::before {
+    content: "";
+    display: inline-block;
+    width: 0.25rem;
+    height: 1.2em;
+    background-color: #333;
+    margin-right: 0.8rem;
+    vertical-align: middle;
+    border-radius: 0.125rem;
+}
+
+.request-list__title {
+    font-size: 24px;
+    margin-bottom: 1.5rem;
+    font-weight: bold;
+}
+
+.request-list__tabs {
+    display: flex;
+    gap: 4rem;
+    margin-left: 2rem;
+}
+
+.request-list__tab {
+    text-decoration: none;
+    color: #888;
+    font-weight: bold;
+    padding-bottom: 0.5rem;
+}
+
+.request-list__tab--active {
+    color: #000;
+}
+
+.request-list__divider {
+    height: 2px;
+    background-color: #aaa;
+    margin-bottom: 2rem;
+}
+
+.request-list__table-container {
+    background-color: #fff;
+    border-radius: 8px;
+}
+
+.request-list__table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.request-list__table th,
+.request-list__table td {
+    padding: 0.75rem;
+    text-align: left;
+    color: #888;
+    border-bottom: 3px solid #f0f0f0;
+}
+
+.request-list__table th:first-child,
+.request-list__table td:first-child {
+    padding-left: 2rem;
+}
+
+
+.request-list__detail-link {
+    color: #000;
+    text-decoration: none;
+    font-weight: 500;
+}
