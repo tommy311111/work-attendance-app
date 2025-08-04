@@ -100,11 +100,22 @@ class UserAttendanceController extends Controller
     $parsedMonth = Carbon::createFromFormat('Y-m', $month);
 
     // 勤怠情報＋その休憩情報もまとめて取得
-    $attendances = Attendance::with('breaks') // ← ここ
+    $attendances = Attendance::with('breaks', 'attendanceRequests') // ← ここ
         ->where('user_id', $user->id)
         ->where('date', 'like', "$month%")
         ->orderBy('date', 'asc')
         ->get();
+
+// 各勤怠に status を追加（pending/approved/none）
+    $attendances = $attendances->map(function ($attendance) {
+        $latestRequest = $attendance->attendanceRequests->sortByDesc('created_at')->first();
+        if ($latestRequest) {
+            $attendance->request_status = $latestRequest->status; // 例: 'pending', 'approved'
+        } else {
+            $attendance->request_status = null;
+        }
+        return $attendance;
+    });
 
     return view('user.attendance.index', [
         'attendances' => $attendances,
