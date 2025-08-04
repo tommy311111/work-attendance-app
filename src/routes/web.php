@@ -46,6 +46,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/stamp_correction_request/list', [UserRequestController::class, 'index'])->name('attendance_requests.index');
 });
 
+
 use App\Http\Controllers\Admin\AdminAttendanceController;
 
 //管理者
@@ -56,9 +57,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/admin/attendance/list', [AdminAttendanceController::class, 'index'])
         ->name('admin.attendance.index');
 
-    Route::get('/admin/other-page', [AdminAttendanceController::class, 'other'])
-        ->name('admin.other.page');
-
-    Route::get('/dashboard', [AdminAttendanceController::class, 'dashboard'])
-        ->name('admin.dashboard'); // ← adminだけどURLは/adminではない
+    Route::get('/attendance/{id}', [AdminAttendanceController::class, 'show'])->name('attendance.show');
+    Route::get('/attendance-requests/{id}/edit', [AdminAttendanceRequestController::class, 'edit'])->name('attendance-requests.edit');
 });

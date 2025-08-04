@@ -78,12 +78,12 @@
 .attendance-list__table td {
     padding: 0.5rem;
     text-align: center;
-    border-bottom: 1px solid #ddd;
+    border-bottom: 3px solid #f0f0f0;
     color: #888;
 }
 
 .attendance-list__table thead th {
-    border-bottom: 2px solid #ddd;
+    border-bottom: 3px solid #ddd;
     font-weight: bold;
 }
 
