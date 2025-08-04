@@ -10,56 +10,51 @@ use Carbon\Carbon;
 
 class AttendanceRequestBreakSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
     public function run()
     {
-        $requests = AttendanceRequest::all();
+        $requests = AttendanceRequest::where('request_type', 'break')->get();
 
         foreach ($requests as $request) {
+            $attendance = $request->attendance;
+
+            if (!$attendance || !$attendance->clock_in || !$attendance->clock_out) {
+                continue;
+            }
+
+            $clockIn = Carbon::parse($attendance->clock_in);
+            $clockOut = Carbon::parse($attendance->clock_out);
+
             // 該当の Attendance に紐づく BreakTime を取得
-            $breaks = BreakTime::where('attendance_id', $request->attendance_id)->get();
+            $breaks = BreakTime::where('attendance_id', $attendance->id)->get();
 
-            if ($breaks->count() > 0) {
-                // 1〜2件ランダムに紐づける（重複回避）
-                $count = rand(1, min(2, $breaks->count()));
-                $selectedBreaks = $breaks->random($count);
+            if ($breaks->isEmpty()) {
+                continue;
+            }
 
-                foreach ($selectedBreaks as $break) {
-                    // 元の時刻から±15分の範囲でランダム修正
-                    $requestedStart = $break->break_start_at
-                        ? Carbon::parse($break->break_start_at)->addMinutes(rand(-15, 15))
-                        : null;
+            // 1〜2件ランダムに紐づける（重複回避）
+            $selectedBreaks = $breaks->random(rand(1, min(2, $breaks->count())));
 
-                    $requestedEnd = $break->break_end_at
-                        ? Carbon::parse($break->break_end_at)->addMinutes(rand(-15, 15))
-                        : null;
+            foreach ($selectedBreaks as $break) {
+                $originalStart = Carbon::parse($break->break_start_at);
+                $originalEnd = Carbon::parse($break->break_end_at);
 
-                    // ランダムにどちらかまたは両方を選ぶ（最低1つ）
-                    $options = [
-                        'requested_start_time' => $requestedStart,
-                        'requested_end_time' => $requestedEnd,
-                    ];
+                // ランダムに±15分でずらす
+                $requestedStart = $originalStart->copy()->addMinutes(rand(-15, 15));
+                $requestedEnd = $originalEnd->copy()->addMinutes(rand(-15, 15));
 
-                    $keys = array_keys($options);
-                    shuffle($keys);
-                    $selectedKeys = array_slice($keys, rand(1, count($keys)));
+                // 出勤～退勤の範囲に収める
+                $requestedStart = $requestedStart->lt($clockIn) ? $clockIn->copy() : $requestedStart;
+                $requestedStart = $requestedStart->gt($clockOut) ? $clockOut->copy()->subMinutes(5) : $requestedStart;
 
-                    // 作成用データに含める
-                    $data = [
-                        'attendance_request_id' => $request->id,
-                        'break_id' => $break->id,
-                    ];
+                $requestedEnd = $requestedEnd->gt($clockOut) ? $clockOut->copy() : $requestedEnd;
+                $requestedEnd = $requestedEnd->lt($requestedStart) ? $requestedStart->copy()->addMinutes(5) : $requestedEnd;
 
-                    foreach ($selectedKeys as $key) {
-                        $data[$key] = $options[$key];
-                    }
-
-                    AttendanceRequestBreak::factory()->create($data);
-                }
+                AttendanceRequestBreak::create([
+                    'attendance_request_id' => $request->id,
+                    'break_id' => $break->id,
+                    'requested_start_time' => $requestedStart,
+                    'requested_end_time' => $requestedEnd,
+                ]);
             }
         }
 

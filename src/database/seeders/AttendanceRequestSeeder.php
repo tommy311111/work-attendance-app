@@ -18,36 +18,33 @@ class AttendanceRequestSeeder extends Seeder
         foreach ($attendances as $attendance) {
             if (rand(1, 100) <= 8) { // 8%の確率で申請を作成
 
-                $clockIn = $attendance->clock_in ? Carbon::parse($attendance->clock_in)->addMinutes(rand(-15, 15)) : null;
-                $clockOut = $attendance->clock_out ? Carbon::parse($attendance->clock_out)->addMinutes(rand(-15, 15)) : null;
+                $originalClockIn = $attendance->clock_in ? Carbon::parse($attendance->clock_in) : null;
+                $originalClockOut = $attendance->clock_out ? Carbon::parse($attendance->clock_out) : null;
 
-                $options = [];
-
-                if ($clockIn) {
-                    $options['requested_clock_in_time'] = $clockIn;
+                if (!$originalClockIn || !$originalClockOut) {
+                    continue;
                 }
 
-                if ($clockOut) {
-                    $options['requested_clock_out_time'] = $clockOut;
+                // 修正希望時刻（±15分以内）
+                $clockIn = $originalClockIn->copy()->addMinutes(rand(-15, 15));
+                $clockOut = $originalClockOut->copy()->addMinutes(rand(-15, 15));
+
+                // 整合性チェック：出勤が退勤より後にならないように
+                if ($clockIn->gt($clockOut)) {
+                    [$clockIn, $clockOut] = [$clockOut, $clockIn];
                 }
 
-                // 必ず1つは含める（両方ある場合はランダムに1つ or 両方）
-                $keys = array_keys($options);
-                shuffle($keys);
-                $selectedKeys = array_slice($keys, 1); // 最低1つは選ばれる（max 2）
+                // request_typeをランダムに決定
+                $requestType = collect(['clock_in', 'clock_out', 'break'])->random();
 
-                $data = [
-                    'attendance_id' => $attendance->id,
-                    'user_id' => $attendance->user_id,
-                    'reviewed_by' => isset($adminUser) ? $adminUser->id : null,
+                AttendanceRequest::factory()->create([
+    'attendance_id' => $attendance->id,
+    'user_id' => $attendance->user_id,
+    'reviewed_by' => $adminUser ? $adminUser->id : null,
+    'requested_clock_in_time' => $clockIn,
+    'requested_clock_out_time' => $clockOut,
+]);
 
-                ];
-
-                foreach ($selectedKeys as $key) {
-                    $data[$key] = $options[$key];
-                }
-
-                AttendanceRequest::factory()->create($data);
             }
         }
 
