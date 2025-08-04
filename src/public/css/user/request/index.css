@@ -22,13 +22,14 @@ body {
 }
 
 .request-list__title {
-    font-size: 24px;
+    font-size: 1.5rem;
     margin-bottom: 1.5rem;
     font-weight: bold;
 }
 
 .request-list__tabs {
     display: flex;
+    flex-wrap: wrap;
     gap: 4rem;
     margin-left: 2rem;
 }
@@ -38,6 +39,7 @@ body {
     color: #888;
     font-weight: bold;
     padding-bottom: 0.5rem;
+    font-size: 1rem;
 }
 
 .request-list__tab--active {
@@ -52,12 +54,14 @@ body {
 
 .request-list__table-container {
     background-color: #fff;
-    border-radius: 8px;
+    border-radius: 0.5rem;
+    overflow-x: auto;
 }
 
 .request-list__table {
     width: 100%;
     border-collapse: collapse;
+    min-width: 600px;
 }
 
 .request-list__table th,
@@ -66,6 +70,7 @@ body {
     text-align: left;
     color: #888;
     border-bottom: 3px solid #f0f0f0;
+    font-size: 0.95rem;
 }
 
 .request-list__table th:first-child,
@@ -73,9 +78,72 @@ body {
     padding-left: 2rem;
 }
 
-
 .request-list__detail-link {
     color: #000;
     text-decoration: none;
     font-weight: 500;
+    font-size: 0.95rem;
+}
+
+
+/* ===== レスポンシブ対応（タブレット）768px〜850px ===== */
+@media screen and (max-width: 850px) {
+    .request-list__wrapper {
+        width: 90%;
+        padding: 1rem;
+    }
+
+    .request-list__title {
+        font-size: 1.3rem;
+    }
+
+    .request-list__tabs {
+        gap: 2rem;
+        margin-left: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .request-list__tab {
+        font-size: 0.95rem;
+    }
+
+    .request-list__table th,
+    .request-list__table td {
+        padding: 0.5rem;
+        font-size: 0.9rem;
+    }
+
+    .request-list__table th:first-child,
+    .request-list__table td:first-child {
+        padding-left: 1rem;
+    }
+
+    .request-list__detail-link {
+        font-size: 0.9rem;
+    }
+}
+
+
+/* ===== PCワイド画面対応（1400px〜1540px） ===== */
+@media screen and (min-width: 1400px) {
+    .request-list__wrapper {
+        width: 50%;
+    }
+
+    .request-list__title {
+        font-size: 1.7rem;
+    }
+
+    .request-list__tab {
+        font-size: 1.05rem;
+    }
+
+    .request-list__table th,
+    .request-list__table td {
+        font-size: 1rem;
+    }
+
+    .request-list__detail-link {
+        font-size: 1rem;
+    }
 }

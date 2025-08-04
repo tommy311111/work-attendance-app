@@ -46,3 +46,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/stamp_correction_request/list', [UserRequestController::class, 'index'])->name('attendance_requests.index');
 });
 
+//管理者
+Route::get('/admin/login', [AuthenticatedSessionController::class, 'create'])->name('admin.login');
+Route::post('/admin/login', [AuthenticatedSessionController::class, 'store']);

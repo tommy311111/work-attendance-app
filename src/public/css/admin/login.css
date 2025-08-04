@@ -1,0 +1,106 @@
+.login__content {
+    background: #FFFFFF;
+    padding: 2.5rem;
+    border-radius: 1.875rem;
+    border: none;
+    width: 100%;
+    max-width: 35rem;
+    margin: 0 auto;
+}
+
+.login-form__heading {
+    text-align: center;
+    margin-bottom: 1.25rem;
+}
+
+.login-form__heading-title {
+    margin-top: 2rem;
+    font-weight: 400;
+    font-size: 2.5rem;
+}
+
+.login-form {
+    width: 100%;
+}
+
+.form__group {
+    margin-bottom: 0.9375rem;
+}
+
+.form__label--item {
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.form__group-title {
+    margin: 0.25rem 0;
+}
+
+.form__input--text input {
+    width: 100%;
+    font-size: 0.875rem;
+    padding: 0.625rem;
+    border: 1px solid #E0DFDE;
+    border-radius: 0.3125rem;
+    box-sizing: border-box;
+}
+
+.form__error {
+    color: #F65A5A;
+    font-size: 0.875rem;
+    padding: 0.5rem 0;
+}
+
+.form__button {
+    width: 100%;
+    margin-top: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+.form__button-submit {
+    width: 100%;
+    padding: 0.625rem;
+    border: none;
+    border-radius: 0.25rem;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #fff;
+    background-color: #000000;
+    cursor: pointer;
+}
+
+
+/* -----------------------------
+    レスポンシブ対応
+----------------------------- */
+
+/* ✅ PC対応: 1400px〜1540px */
+@media (min-width: 87.5rem) and (max-width: 96.25rem) {
+    .login__content {
+        padding: 2.5rem;
+    }
+
+    .login-form__heading-title {
+        font-size: 2.25rem;
+    }
+}
+
+/* ✅ タブレット対応: 768px〜850px */
+@media (min-width: 48rem) and (max-width: 53.125rem) {
+    .login__content {
+        padding: 2rem;
+        border-radius: 1.5rem;
+    }
+
+    .login-form__heading-title {
+        font-size: 2rem;
+    }
+
+    .form__input--text input {
+        font-size: 0.875rem;
+    }
+
+    .form__button-submit {
+        font-size: 1.125rem;
+    }
+}
