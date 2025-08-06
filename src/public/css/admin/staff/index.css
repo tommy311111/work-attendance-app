@@ -1,0 +1,111 @@
+/* =============================
+    スタッフ一覧：全体レイアウト
+============================= */
+.staff-list__wrapper {
+    background-color: #f0f0f0;
+    min-height: 100vh;
+    padding: 2rem 0;
+}
+
+.staff-list__content {
+    width: 50%;
+    margin: 0 auto;
+    padding: 2rem;
+    border-radius: 0.5rem;
+    font-family: sans-serif;
+}
+
+/* =============================
+    タイトル（見出し）
+============================= */
+.staff-list__title::before {
+    content: "";
+    display: inline-block;
+    width: 0.25rem;
+    height: 1.2em;
+    background-color: #333;
+    margin-right: 0.6rem;
+    vertical-align: middle;
+    border-radius: 0.125rem;
+}
+
+.staff-list__title {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    text-align: left;
+    font-weight: bold;
+    color: #333;
+}
+
+/* =============================
+    テーブル
+============================= */
+.staff-list__table {
+    width: 100%;
+    background-color: #fff;
+    border-collapse: collapse;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    margin-top: 3rem;
+}
+
+.staff-list__th,
+.staff-list__td {
+    padding: 0.75rem;
+    text-align: center;
+    border-bottom: 3px solid #f0f0f0;
+    color: #888;
+}
+
+.staff-list__th {
+    font-weight: bold;
+    color: #888;
+    border-bottom: 3px solid #ddd;
+}
+
+/* =============================
+    詳細リンク
+============================= */
+.staff-list__link {
+    color: #000000;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.staff-list__link:hover {
+    text-decoration: underline;
+}
+
+/* =============================
+    レスポンシブ対応
+============================= */
+
+/* PC（1400px〜1540px）向け微調整 */
+@media (min-width: 1400px) and (max-width: 1540px) {
+    .staff-list__content {
+        width: 50%;
+        padding: 2rem 3rem;
+    }
+
+    .staff-list__title {
+        font-size: 1.6rem;
+    }
+}
+
+/* タブレット（768px〜850px）対応 */
+@media (min-width: 768px) and (max-width: 850px) {
+    .staff-list__content {
+        width: 95%;
+        padding: 1rem;
+    }
+
+    .staff-list__title {
+        font-size: 1.4rem;
+    }
+
+    .staff-list__table th,
+    .staff-list__table td {
+        font-size: 0.85rem;
+        padding: 0.5rem;
+    }
+}

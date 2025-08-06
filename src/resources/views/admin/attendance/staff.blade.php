@@ -5,5 +5,5 @@
 @endsection
 
 @section('content')
-こんにちは
+スタッフ別勤怠
 @endsection

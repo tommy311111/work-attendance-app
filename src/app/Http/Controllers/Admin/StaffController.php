@@ -10,7 +10,7 @@ class StaffController extends Controller
 {
     public function index()
     {
-
-        return view('admin.staff.index');
+        $users = User::where('role', 'employee')->get();
+        return view('admin.staff.index', compact('users'));
     }
 }
