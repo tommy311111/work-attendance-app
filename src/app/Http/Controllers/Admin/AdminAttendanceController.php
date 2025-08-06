@@ -35,5 +35,21 @@ class AdminAttendanceController extends Controller
         'currentDate' => $currentDate,
     ]);
 }
+    // 勤怠画面の表示
+    public function show($id)
+    {
+        $attendance = Attendance::findOrFail($id);
+        $breaks = $attendance->breaks;
+        $user = $attendance->user;
 
+
+        // 修正申請が「承認待ち」のものがあるか判定
+    $isPendingApproval = $attendance->attendanceRequests()->where('status', 'pending')->exists();
+
+    if ($isPendingApproval) {
+        return view('user.attendance.request_pending', compact('attendance', 'user', 'breaks'));
+    } else {
+        return view('admin.attendance.show', compact('attendance', 'user', 'breaks'));
+    }
+    }
 }

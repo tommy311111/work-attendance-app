@@ -67,6 +67,7 @@
         <a href="{{ route('attendance-requests.edit', $latestRequest->id) }}" class="admin-attendance-list__detail-link">詳細</a>
     @else
         <a href="{{ route('attendance.show', $attendance->id) }}" class="admin-attendance-list__detail-link">詳細</a>
+
     @endif
 </td>
 

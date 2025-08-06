@@ -48,6 +48,7 @@ Route::middleware(['auth'])->group(function () {
 
 
 use App\Http\Controllers\Admin\AdminAttendanceController;
+use App\Http\Controllers\Admin\AdminRequestController;
 
 //管理者
 Route::get('/admin/login', [AuthenticatedSessionController::class, 'create'])->name('admin.login');
@@ -58,5 +59,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('admin.attendance.index');
 
     Route::get('/attendance/{id}', [AdminAttendanceController::class, 'show'])->name('attendance.show');
-    Route::get('/attendance-requests/{id}/edit', [AdminAttendanceRequestController::class, 'edit'])->name('attendance-requests.edit');
+
+    Route::patch('/admin/attendance-requests/{id}', [AdminRequestController::class, 'update'])
+    ->name('admin.attendance-requests.update');
+
 });
