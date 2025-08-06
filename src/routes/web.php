@@ -49,12 +49,13 @@ Route::middleware(['auth'])->group(function () {
 
 use App\Http\Controllers\Admin\AdminAttendanceController;
 use App\Http\Controllers\Admin\AdminRequestController;
+use App\Http\Controllers\Admin\StaffController;
 
 //管理者
 Route::get('/admin/login', [AuthenticatedSessionController::class, 'create'])->name('admin.login');
 Route::post('/admin/login', [AuthenticatedSessionController::class, 'store']);
 
-Route::middleware(['auth', 'verified'])->group(function () {
+Route::middleware(['auth'])->group(function () {
     Route::get('/admin/attendance/list', [AdminAttendanceController::class, 'index'])
         ->name('admin.attendance.index');
 
@@ -62,5 +63,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::patch('/admin/attendance-requests/{id}', [AdminRequestController::class, 'update'])
     ->name('admin.attendance-requests.update');
+
+    Route::get('/admin/staff/list', [StaffController::class, 'index'])->name('admin.staff.list');
 
 });
