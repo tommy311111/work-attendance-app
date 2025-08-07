@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Attendance;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 
@@ -52,4 +53,38 @@ class AdminAttendanceController extends Controller
         return view('admin.attendance.show', compact('attendance', 'user', 'breaks'));
     }
     }
+
+    public function staffAttendance(Request $request, $id)
+{
+    // 1人のユーザーを取得（または404）
+    $user = User::where('role', 'employee')->findOrFail($id);
+
+    // 表示対象の年月を取得（なければ今月）
+    $month = $request->input('month', Carbon::now()->format('Y-m'));
+    $parsedMonth = Carbon::createFromFormat('Y-m', $month);
+
+    // 勤怠情報＋その休憩情報もまとめて取得
+    $attendances = Attendance::with('breaks', 'attendanceRequests') // ← ここ
+        ->where('user_id', $user->id)
+        ->where('date', 'like', "$month%")
+        ->orderBy('date', 'asc')
+        ->get();
+
+// 各勤怠に status を追加（pending/approved/none）
+    $attendances = $attendances->map(function ($attendance) {
+        $latestRequest = $attendance->attendanceRequests->sortByDesc('created_at')->first();
+        if ($latestRequest) {
+            $attendance->request_status = $latestRequest->status; // 例: 'pending', 'approved'
+        } else {
+            $attendance->request_status = null;
+        }
+        return $attendance;
+    });
+
+    return view('admin.attendance.staff', [
+        'user' => $user,
+        'attendances' => $attendances,
+        'currentMonth' => $parsedMonth,
+    ]);
+}
 }

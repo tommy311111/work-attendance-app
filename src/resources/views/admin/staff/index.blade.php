@@ -23,7 +23,7 @@
                             <td class="staff-list__td">{{ $user->name }}</td>
                             <td class="staff-list__td">{{ $user->email }}</td>
                             <td class="staff-list__td">
-                                <a href="{{ url('/admin/attendance/staff/' . $user->id) }}" class="staff-list__link">詳細</a>
+                                <a href="{{ route('admin.attendance.staff', $user->id)}}" class="staff-list__link">詳細</a>
                             </td>
                         </tr>
                     @empty
