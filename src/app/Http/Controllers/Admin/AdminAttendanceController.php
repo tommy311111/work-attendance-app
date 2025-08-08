@@ -8,6 +8,8 @@ use App\Models\Attendance;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Response;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 
 class AdminAttendanceController extends Controller
@@ -87,4 +89,62 @@ class AdminAttendanceController extends Controller
         'currentMonth' => $parsedMonth,
     ]);
 }
+
+public function exportCsv(Request $request, $id): StreamedResponse
+{
+    $month = $request->input('month', now()->format('Y-m'));
+    $user = User::findOrFail($id);
+
+    $attendances = Attendance::with('breaks', 'attendanceRequests')
+        ->where('user_id', $user->id)
+        ->where('date', 'like', "$month%")
+        ->orderBy('date', 'asc')
+        ->get();
+
+    $monthFormatted = \Carbon\Carbon::parse($month . '-01')->format('Ym');
+$filename = "{$user->name}_{$monthFormatted}_kintai.csv";
+
+// Shift_JISに変換してContent-Dispositionにセット
+$headers = [
+    'Content-Type' => 'text/csv; charset=Shift_JIS',
+    'Content-Disposition' => 'attachment; filename="' . mb_convert_encoding($filename, 'SJIS-win', 'UTF-8') . '"',
+];
+
+
+    $headers = [
+        'Content-Type' => 'text/csv; charset=Shift_JIS',
+        'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+    ];
+
+    return Response::stream(function () use ($attendances, $user, $month) {
+        $handle = fopen('php://output', 'w');
+
+        // Excelで文字化けしないようUTF-8→SJIS変換
+        $monthText = \Carbon\Carbon::parse($month . '-01')->format('Y年n月');
+        $title = "{$user->name}さんの勤怠 ({$monthText})";
+
+        fputcsv($handle, [mb_convert_encoding($title, 'SJIS-win', 'UTF-8')]);
+        fputcsv($handle, []); // 空行
+
+        // 項目名
+        $headersRow = ['日付', '出勤', '退勤', '休憩合計', '勤務時間', '申請ステータス'];
+        fputcsv($handle, array_map(fn($v) => mb_convert_encoding($v, 'SJIS-win', 'UTF-8'), $headersRow));
+
+        // データ
+        foreach ($attendances as $a) {
+            $date = \Carbon\Carbon::parse($a->date)->format('Y/m/d');
+            $clockIn = $a->status === '勤務外' ? '' : \Carbon\Carbon::parse($a->clock_in)->format('H:i');
+            $clockOut = $a->status === '勤務外' ? '' : \Carbon\Carbon::parse($a->clock_out)->format('H:i');
+            $break = $a->total_break_time_formatted;
+            $duration = $a->work_duration_formatted;
+            $status = optional($a->attendanceRequests->sortByDesc('created_at')->first())->status ?? '-';
+
+            $row = [$date, $clockIn, $clockOut, $break, $duration, $status];
+            fputcsv($handle, array_map(fn($v) => mb_convert_encoding($v, 'SJIS-win', 'UTF-8'), $row));
+        }
+
+        fclose($handle);
+    }, 200, $headers);
+}
+
 }
