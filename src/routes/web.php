@@ -43,7 +43,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/attendance-requests/{id}', [UserRequestController::class, 'storeRequest'])->name('attendance-requests.store');
 
     //修正申請一覧
-    Route::get('/stamp_correction_request/list', [UserRequestController::class, 'index'])->name('attendance_requests.index');
+    Route::get('/stamp_correction_request/list', [UserRequestController::class, 'index'])->name('attendance_requests.list');
 });
 
 
@@ -72,5 +72,17 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/admin/attendance/staff/{id}/csv', [AdminAttendanceController::class, 'exportCsv'])
     ->name('admin.attendance.staff.csv');
-
 });
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/stamp_correction_request/list', function () {
+        if (auth()->user()->role === 'admin') {
+            return app(\App\Http\Controllers\Admin\AdminRequestController::class)->index();
+        } else {
+            return app(\App\Http\Controllers\User\UserRequestController::class)->index();
+        }
+    })->name('attendance_requests.list');
+});
+
+
+

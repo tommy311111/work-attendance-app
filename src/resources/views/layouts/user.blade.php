@@ -23,7 +23,7 @@
             <ul class="header-nav-list">
                 <li class="header-nav-item"><a href="{{ route('attendance.create') }}">勤怠</a></li>
                 <li class="header-nav-item"><a href="{{ route('attendance.index') }}">勤怠一覧</a></li>
-                <li class="header-nav-item"><a href="{{ route('attendance_requests.index') }}">申請</a></li>
+                <li class="header-nav-item"><a href="{{ route('attendance_requests.list') }}">申請</a></li>
                 <li class="header-nav-item">
                     <form action="/logout" method="POST" class="logout-form">
                         @csrf

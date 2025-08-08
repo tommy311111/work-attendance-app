@@ -9,11 +9,11 @@
     <h1 class="request-list__title">申請一覧</h1>
 
     <div class="request-list__tabs">
-        <a href="{{ route('attendance_requests.index', ['status' => 'pending']) }}"
+        <a href="{{ route('attendance_requests.list', ['status' => 'pending']) }}"
            class="request-list__tab {{ request('status') === 'pending' ? 'request-list__tab--active' : '' }}">
            承認待ち
         </a>
-        <a href="{{ route('attendance_requests.index', ['status' => 'approved']) }}"
+        <a href="{{ route('attendance_requests.list', ['status' => 'approved']) }}"
            class="request-list__tab {{ request('status') === 'approved' ? 'request-list__tab--active' : '' }}">
            承認済み
         </a>

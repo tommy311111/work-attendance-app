@@ -55,4 +55,10 @@ class AdminRequestController extends Controller
         return redirect()->route('admin.attendance.index')
             ->with('success', '勤怠データを更新しました。');
     }
+
+    public function index()
+{
+
+    return view('admin.request.index');
+}
 }
