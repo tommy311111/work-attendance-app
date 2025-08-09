@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AttendanceUpdateRequest;
 use App\Models\Attendance;
+use App\Models\AttendanceRequest;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 
@@ -56,9 +57,20 @@ class AdminRequestController extends Controller
             ->with('success', '勤怠データを更新しました。');
     }
 
-    public function index()
+public function index()
 {
+    $status = request('status','pending'); // 'pending' or 'approved'
 
-    return view('admin.request.index');
+     $query = AttendanceRequest::query(); // 全件対象
+
+    if ($status === 'pending') {
+        $query->where('status', 'pending');
+    } elseif ($status === 'approved') {
+        $query->where('status', 'approved');
+    }
+
+    $requests = $query->latest()->get();
+
+    return view('admin.request.index', compact('requests'));
 }
 }

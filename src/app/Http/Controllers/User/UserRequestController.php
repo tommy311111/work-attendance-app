@@ -83,7 +83,7 @@ public function editRequest($id)
         $query->where('status', 'approved');
     }
 
-    $requests = $query->latest()->paginate(10);
+    $requests = $query->latest()->get();
 
     return view('user.request.index', compact('requests'));
 }
