@@ -73,4 +73,9 @@ public function index()
 
     return view('admin.request.index', compact('requests'));
 }
+
+    public function approveForm($id)
+    {
+        return view('admin.request.approve');
+    }
 }

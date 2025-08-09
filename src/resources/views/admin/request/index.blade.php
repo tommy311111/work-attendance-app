@@ -48,7 +48,7 @@
             詳細
         </a>
     @else
-        <a href="{{ route('attendance-requests.edit', $request->id) }}" class="request-list__detail-link">
+        <a href="{{ route('stamp_correction_request.approve_form', $request->id) }}" class="request-list__detail-link">
             詳細
         </a>
     @endif

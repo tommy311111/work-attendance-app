@@ -72,6 +72,18 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/admin/attendance/staff/{id}/csv', [AdminAttendanceController::class, 'exportCsv'])
     ->name('admin.attendance.staff.csv');
+
+    // 承認画面表示
+Route::get(
+    '/stamp_correction_request/approve/{attendance_correct_request}',
+    [AdminRequestController::class, 'approveForm']
+)->name('stamp_correction_request.approve_form');
+
+// 承認処理
+Route::put(
+    '/stamp_correction_request/approve/{attendance_correct_request}',
+    [AdminRequestController::class, 'approve']
+)->name('stamp_correction_request.approve');
 });
 
 Route::middleware(['auth'])->group(function () {
