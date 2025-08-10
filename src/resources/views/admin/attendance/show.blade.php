@@ -6,7 +6,7 @@
 
 @section('content')
 <div class="attendance-detail__wrapper">
-    <h2 class="attendance-detail__title">勤怠詳細</h2>
+    <h1 class="attendance-detail__title">勤怠詳細</h1>
 
     <form method="POST" action="{{ route('admin.attendance-requests.update', $attendance->id) }}">
 @csrf

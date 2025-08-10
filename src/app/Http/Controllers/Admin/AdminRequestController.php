@@ -75,7 +75,33 @@ public function index()
 }
 
     public function approveForm($id)
-    {
-        return view('admin.request.approve');
+{
+    // 修正申請を取得（勤怠・ユーザー・休憩時間も同時ロード）
+    $attendanceRequest = AttendanceRequest::with([
+        'attendance.breaks',
+        'attendance.user',
+        'attendanceRequestBreaks', // 申請内の休憩修正がある場合
+    ])->findOrFail($id);
+
+    // 紐づく勤怠情報
+    $attendance = $attendanceRequest->attendance;
+    $breaks = $attendanceRequest->attendanceRequestBreaks;
+    $user = $attendance->user;
+
+    if ($attendanceRequest->status === 'pending') {
+        // 備考や申請内容も渡す
+        $reason = $attendanceRequest->reason ?? '';
+        return view('admin.request.approve', compact(
+            'attendance',
+            'user',
+            'breaks',
+            'reason',
+            'attendanceRequest'
+        ));
     }
+
+    // 承認待ちでなければ勤怠詳細へ
+    return view('admin.attendance.show', compact('attendance', 'user', 'breaks'));
+}
+
 }

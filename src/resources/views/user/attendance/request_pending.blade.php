@@ -6,7 +6,7 @@
 
 @section('content')
     <div class="attendance-detail__wrapper">
-        <h2 class="attendance-detail__title">勤怠詳細</h2>
+        <h1 class="attendance-detail__title">勤怠詳細</h1>
         <form action="{{ route('attendance-requests.edit', $attendance->id) }}" method="GET">
             <table class="attendance-detail__table">
                 <tr>
