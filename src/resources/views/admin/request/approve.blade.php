@@ -8,7 +8,7 @@
 <div class="approve-request__wrapper">
     <h1 class="approve-request__title">勤怠詳細</h1>
 
-    <form action="{{ route('stamp_correction_request.approve', $attendance->id) }}" method="POST">
+    <form action="{{ route('stamp_correction_request.approve', $attendanceRequest->id) }}" method="POST">
         @csrf
         @method('PUT')
 

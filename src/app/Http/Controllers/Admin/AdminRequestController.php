@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AttendanceUpdateRequest;
 use App\Models\Attendance;
 use App\Models\AttendanceRequest;
+use App\Models\BreakTime;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 
@@ -102,6 +104,56 @@ public function index()
 
     // 承認待ちでなければ勤怠詳細へ
     return view('admin.attendance.show', compact('attendance', 'user', 'breaks'));
+}
+
+public function approve($id)
+{
+    DB::transaction(function () use ($id) {
+        $attendanceRequest = AttendanceRequest::with([
+            'attendance.breaks',
+            'attendanceRequestBreaks', // 休憩修正申請
+        ])->findOrFail($id);
+
+        $attendance = $attendanceRequest->attendance;
+
+
+        // 出勤・退勤の修正
+        if (!empty($attendanceRequest->requested_clock_in_time)) {
+            $attendance->clock_in = $attendanceRequest->requested_clock_in_time;
+        }
+        if (!empty($attendanceRequest->requested_clock_out_time)) {
+            $attendance->clock_out = $attendanceRequest->requested_clock_out_time;
+        }
+        $attendance->save();
+
+        // 休憩時間の修正（attendance_request_breaksテーブルの内容を反映）
+        if ($attendanceRequest->attendanceRequestBreaks && $attendanceRequest->attendanceRequestBreaks->count()) {
+            foreach ($attendanceRequest->attendanceRequestBreaks as $breakRequest) {
+                $break = $attendance->breaks->firstWhere('id', $breakRequest->break_id);
+                if ($break) {
+                    if (!empty($breakRequest->requested_break_start_at)) {
+                        $break->break_start_at = $breakRequest->requested_break_start_at;
+                    }
+                    if (!empty($breakRequest->requested_break_end_at)) {
+                        $break->break_end_at = $breakRequest->requested_break_end_at;
+                    }
+                    $break->save();
+                }
+            }
+        }
+
+        // 承認情報の更新
+        $attendanceRequest->status = 'approved';
+        $attendanceRequest->reviewed_by = Auth::id();
+        $attendanceRequest->reviewed_at = Carbon::now();
+        $attendanceRequest->save();
+
+    });
+
+    return redirect()
+    ->route('attendance_requests.list', ['status' => 'pending'])
+    ->with('success', '修正申請を承認しました。');
+
 }
 
 }
