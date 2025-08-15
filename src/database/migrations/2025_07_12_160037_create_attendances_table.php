@@ -20,7 +20,6 @@ class CreateAttendancesTable extends Migration
             $table->string('status',20)->default('勤務外');
             $table->datetime('clock_in')->nullable();//片方ずつ打刻するから
             $table->datetime('clock_out')->nullable();
-            $table->text('reason')->nullable();
             $table->timestamps();
 
             // ユニーク制約（1日1回のみ出勤記録を許可）

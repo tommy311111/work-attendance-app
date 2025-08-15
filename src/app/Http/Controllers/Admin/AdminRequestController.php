@@ -78,33 +78,26 @@ public function index()
 
     public function approveForm($id)
 {
-    // 修正申請を取得（勤怠・ユーザー・休憩時間も同時ロード）
     $attendanceRequest = AttendanceRequest::with([
         'attendance.breaks',
         'attendance.user',
-        'attendanceRequestBreaks', // 申請内の休憩修正がある場合
+        'attendanceRequestBreaks',
     ])->findOrFail($id);
 
-    // 紐づく勤怠情報
     $attendance = $attendanceRequest->attendance;
     $breaks = $attendanceRequest->attendanceRequestBreaks;
     $user = $attendance->user;
+    $reason = $attendanceRequest->reason ?? '';
 
-    if ($attendanceRequest->status === 'pending') {
-        // 備考や申請内容も渡す
-        $reason = $attendanceRequest->reason ?? '';
-        return view('admin.request.approve', compact(
-            'attendance',
-            'user',
-            'breaks',
-            'reason',
-            'attendanceRequest'
-        ));
-    }
-
-    // 承認待ちでなければ勤怠詳細へ
-    return view('admin.attendance.show', compact('attendance', 'user', 'breaks'));
+    return view('admin.request.approve', compact(
+        'attendance',
+        'user',
+        'breaks',
+        'reason',
+        'attendanceRequest'
+    ));
 }
+
 
 public function approve($id)
 {
@@ -127,20 +120,30 @@ public function approve($id)
         $attendance->save();
 
         // 休憩時間の修正（attendance_request_breaksテーブルの内容を反映）
-        if ($attendanceRequest->attendanceRequestBreaks && $attendanceRequest->attendanceRequestBreaks->count()) {
-            foreach ($attendanceRequest->attendanceRequestBreaks as $breakRequest) {
-                $break = $attendance->breaks->firstWhere('id', $breakRequest->break_id);
-                if ($break) {
-                    if (!empty($breakRequest->requested_break_start_at)) {
-                        $break->break_start_at = $breakRequest->requested_break_start_at;
-                    }
-                    if (!empty($breakRequest->requested_break_end_at)) {
-                        $break->break_end_at = $breakRequest->requested_break_end_at;
-                    }
-                    $break->save();
-                }
-            }
-        }
+if ($attendanceRequest->attendanceRequestBreaks && $attendanceRequest->attendanceRequestBreaks->count()) {
+    foreach ($attendanceRequest->attendanceRequestBreaks as $breakRequest) {
+        $break = $attendance->breaks->firstWhere('id', $breakRequest->break_id);
+
+        if ($break) {
+    // 既存休憩を更新
+    if (!empty($breakRequest->requested_start_time)) {
+        $break->break_start_at = $breakRequest->requested_start_time;
+    }
+    if (!empty($breakRequest->requested_end_time)) {
+        $break->break_end_at = $breakRequest->requested_end_time;
+    }
+    $break->save();
+} else {
+    // 新規休憩を作成
+    $attendance->breaks()->create([
+        'break_start_at' => $breakRequest->requested_start_time,
+        'break_end_at'   => $breakRequest->requested_end_time,
+    ]);
+}
+
+    }
+}
+
 
         // 承認情報の更新
         $attendanceRequest->status = 'approved';

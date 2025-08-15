@@ -43,15 +43,9 @@
                         <td>{{ $request->reason }}</td>
                         <td>{{ $request->created_at->format('Y/m/d') }}</td>
                         <td>
-    @if ($request->status === 'approved')
-        <a href="{{ route('attendance.show', $request->attendance_id) }}" class="request-list__detail-link">
-            詳細
-        </a>
-    @else
-        <a href="{{ route('stamp_correction_request.approve_form', $request->id) }}" class="request-list__detail-link">
-            詳細
-        </a>
-    @endif
+    <a href="{{ route('stamp_correction_request.approve_form', $request->id) }}" class="request-list__detail-link">
+        詳細
+    </a>
 </td>
 
                     </tr>

@@ -20,10 +20,11 @@ class CreateAttendanceRequestBreaksTable extends Migration
                 ->constrained('attendance_requests')
                 ->onDelete('cascade');
 
-            // 外部キー：breaks テーブル
             $table->foreignId('break_id')
-                ->constrained('breaks')
-                ->onDelete('cascade');
+    ->nullable() // 最初から nullable にする
+    ->constrained('breaks')
+    ->onDelete('cascade');
+
 
             // 修正希望の休憩時間
             $table->timestamp('requested_start_time')->nullable();

@@ -4,7 +4,7 @@ body {
 }
 
 .request-list__wrapper {
-    width: 60%;
+    width: 70%;
     margin: 1rem auto;
     background-color: #f0f0f0;
     padding: 1rem;
@@ -127,7 +127,7 @@ body {
 /* ===== PCワイド画面対応（1400px〜1540px） ===== */
 @media screen and (min-width: 1400px) {
     .request-list__wrapper {
-        width: 50%;
+        width: 70%;
     }
 
     .request-list__title {

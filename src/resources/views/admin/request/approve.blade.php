@@ -69,7 +69,7 @@
         </table>
 
         <div class="approve-request__action">
-            @if ($attendance->status === 'approved')
+            @if ($attendanceRequest->status === 'approved')
                 <button type="button" class="approve-request__button approve-request__button--approved" disabled>
                     承認済み
                 </button>

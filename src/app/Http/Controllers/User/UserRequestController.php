@@ -41,21 +41,22 @@ class UserRequestController extends Controller
     ]);
 
     if (!empty($request->breaks)) {
-        foreach ($request->breaks as $breakInput) {
-            if (!empty($breakInput['id']) && (!empty($breakInput['break_start']) || !empty($breakInput['break_end']))) {
-                AttendanceRequestBreak::create([
-                    'attendance_request_id' => $attendanceRequest->id,
-                    'break_id' => $breakInput['id'],
-                    'requested_start_time' => !empty($breakInput['break_start'])
-                        ? Carbon::createFromFormat('Y-m-d H:i', $date . ' ' . $breakInput['break_start'])
-                        : null,
-                    'requested_end_time' => !empty($breakInput['break_end'])
-                        ? Carbon::createFromFormat('Y-m-d H:i', $date . ' ' . $breakInput['break_end'])
-                        : null,
-                ]);
-            }
+    foreach ($request->breaks as $breakInput) {
+        if (!empty($breakInput['break_start']) || !empty($breakInput['break_end'])) {
+            AttendanceRequestBreak::create([
+                'attendance_request_id' => $attendanceRequest->id,
+                'break_id' => !empty($breakInput['id']) ? $breakInput['id'] : null, // 新規ならnull
+                'requested_start_time' => !empty($breakInput['break_start'])
+                    ? Carbon::createFromFormat('Y-m-d H:i', $date . ' ' . $breakInput['break_start'])
+                    : null,
+                'requested_end_time' => !empty($breakInput['break_end'])
+                    ? Carbon::createFromFormat('Y-m-d H:i', $date . ' ' . $breakInput['break_end'])
+                    : null,
+            ]);
         }
     }
+}
+
 
     return redirect()->route('attendance-requests.edit', $attendanceRequest->id)
         ->with('success', '修正申請を送信しました。');
