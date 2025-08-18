@@ -98,7 +98,6 @@ public function index()
     ));
 }
 
-
 public function approve($id)
 {
     DB::transaction(function () use ($id) {
@@ -109,54 +108,57 @@ public function approve($id)
 
         $attendance = $attendanceRequest->attendance;
 
-
-        // 出勤・退勤の修正
-        if (!empty($attendanceRequest->requested_clock_in_time)) {
-            $attendance->clock_in = $attendanceRequest->requested_clock_in_time;
-        }
-        if (!empty($attendanceRequest->requested_clock_out_time)) {
-            $attendance->clock_out = $attendanceRequest->requested_clock_out_time;
-        }
+        // 出勤・退勤の修正（null 許容）
+        $attendance->clock_in  = $attendanceRequest->requested_clock_in_time ?: null;
+        $attendance->clock_out = $attendanceRequest->requested_clock_out_time ?: null;
         $attendance->save();
 
         // 休憩時間の修正（attendance_request_breaksテーブルの内容を反映）
-if ($attendanceRequest->attendanceRequestBreaks && $attendanceRequest->attendanceRequestBreaks->count()) {
-    foreach ($attendanceRequest->attendanceRequestBreaks as $breakRequest) {
-        $break = $attendance->breaks->firstWhere('id', $breakRequest->break_id);
+        if ($attendanceRequest->attendanceRequestBreaks->count()) {
+            foreach ($attendanceRequest->attendanceRequestBreaks as $breakRequest) {
+                $start = $breakRequest->requested_start_time ?: null;
+                $end   = $breakRequest->requested_end_time   ?: null;
 
-        if ($break) {
-    // 既存休憩を更新
-    if (!empty($breakRequest->requested_start_time)) {
-        $break->break_start_at = $breakRequest->requested_start_time;
-    }
-    if (!empty($breakRequest->requested_end_time)) {
-        $break->break_end_at = $breakRequest->requested_end_time;
-    }
-    $break->save();
-} else {
-    // 新規休憩を作成
-    $attendance->breaks()->create([
-        'break_start_at' => $breakRequest->requested_start_time,
-        'break_end_at'   => $breakRequest->requested_end_time,
-    ]);
-}
+                // 既存休憩に紐づく申請
+                if ($breakRequest->break_id) {
+                    $break = $attendance->breaks->firstWhere('id', $breakRequest->break_id);
 
-    }
-}
-
+                    if ($break) {
+                        if ($start === null && $end === null) {
+                            // 両方 null → 削除
+                            $break->delete();
+                        } else {
+                            // 値あり → 更新
+                            $break->update([
+                                'break_start_at' => $start,
+                                'break_end_at'   => $end,
+                            ]);
+                        }
+                    }
+                } else {
+                    // break_id が null → 新規追加（両方 null の場合はスキップ）
+                    if ($start !== null || $end !== null) {
+                        $attendance->breaks()->create([
+                            'break_start_at' => $start,
+                            'break_end_at'   => $end,
+                        ]);
+                    }
+                }
+            }
+        }
 
         // 承認情報の更新
-        $attendanceRequest->status = 'approved';
-        $attendanceRequest->reviewed_by = Auth::id();
-        $attendanceRequest->reviewed_at = Carbon::now();
-        $attendanceRequest->save();
-
+        $attendanceRequest->update([
+            'status'      => 'approved',
+            'reviewed_by' => Auth::id(),
+            'reviewed_at' => Carbon::now(),
+        ]);
     });
 
     return redirect()
-    ->route('attendance_requests.list', ['status' => 'pending'])
-    ->with('success', '修正申請を承認しました。');
-
+        ->route('attendance_requests.list', ['status' => 'pending'])
+        ->with('success', '修正申請を承認しました。');
 }
+
 
 }

@@ -15,19 +15,21 @@ class UserRequestController extends Controller
 {
     public function storeRequest(AttendanceUpdateRequest $request, $id)
 {
-
     $attendance = Attendance::with('breaks')->findOrFail($id);
 
+    // 他ユーザーの勤怠は編集不可
     if ($attendance->user_id !== Auth::id()) {
         abort(403);
     }
 
-    // 日付と入力時刻を組み合わせて datetime に変換
-    $date = $attendance->date->format('Y-m-d'); // モデルに date:cast があれば Carbon として使える
+    // 日付を取得
+    $date = $attendance->date->format('Y-m-d');
 
-    $clockIn = $request->clock_in ? Carbon::createFromFormat('Y-m-d H:i', $date . ' ' . $request->clock_in) : null;
-    $clockOut = $request->clock_out ? Carbon::createFromFormat('Y-m-d H:i', $date . ' ' . $request->clock_out) : null;
+    // 出勤・退勤を空文字なら null に変換
+    $clockIn  = $request->clock_in === '' ? null : Carbon::createFromFormat('Y-m-d H:i', $date . ' ' . $request->clock_in);
+    $clockOut = $request->clock_out === '' ? null : Carbon::createFromFormat('Y-m-d H:i', $date . ' ' . $request->clock_out);
 
+    // 修正申請を作成
     $attendanceRequest = AttendanceRequest::create([
         'user_id' => Auth::id(),
         'attendance_id' => $attendance->id,
@@ -40,27 +42,40 @@ class UserRequestController extends Controller
         'reviewed_at' => null,
     ]);
 
-    if (!empty($request->breaks)) {
-    foreach ($request->breaks as $breakInput) {
-        if (!empty($breakInput['break_start']) || !empty($breakInput['break_end'])) {
+    // 休憩時間を処理（空文字 → null 変換）
+    foreach ($request->breaks ?? [] as $breakInput) {
+        $start = ($breakInput['break_start'] ?? '') === ''
+            ? null
+            : Carbon::createFromFormat('Y-m-d H:i', $date . ' ' . $breakInput['break_start']);
+
+        $end = ($breakInput['break_end'] ?? '') === ''
+            ? null
+            : Carbon::createFromFormat('Y-m-d H:i', $date . ' ' . $breakInput['break_end']);
+
+        // 通常の追加・修正申請
+        if ($start !== null || $end !== null) {
             AttendanceRequestBreak::create([
                 'attendance_request_id' => $attendanceRequest->id,
-                'break_id' => !empty($breakInput['id']) ? $breakInput['id'] : null, // 新規ならnull
-                'requested_start_time' => !empty($breakInput['break_start'])
-                    ? Carbon::createFromFormat('Y-m-d H:i', $date . ' ' . $breakInput['break_start'])
-                    : null,
-                'requested_end_time' => !empty($breakInput['break_end'])
-                    ? Carbon::createFromFormat('Y-m-d H:i', $date . ' ' . $breakInput['break_end'])
-                    : null,
+                'break_id' => $breakInput['id'] ?? null,
+                'requested_start_time' => $start,
+                'requested_end_time' => $end,
+            ]);
+        }
+        // 削除申請（既存の break_id がある & 両方 null）
+        elseif (!empty($breakInput['id']) && $start === null && $end === null) {
+            AttendanceRequestBreak::create([
+                'attendance_request_id' => $attendanceRequest->id,
+                'break_id' => $breakInput['id'],
+                'requested_start_time' => null,
+                'requested_end_time' => null,
             ]);
         }
     }
-}
-
 
     return redirect()->route('attendance-requests.edit', $attendanceRequest->id)
         ->with('success', '修正申請を送信しました。');
 }
+
 
 public function editRequest($id)
 {
