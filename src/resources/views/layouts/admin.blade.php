@@ -19,6 +19,7 @@
             </a>
         </h1>
 
+        @if (!in_array(Route::currentRouteName(), ['admin.login']))
         <nav class="header-nav">
             <ul class="header-nav-list">
                 <li class="header-nav-item"><a href="{{ route('admin.attendance.index') }}">勤怠一覧</a></li>
@@ -32,6 +33,7 @@
                 </li>
             </ul>
         </nav>
+        @endif
     </header>
 
     <main>
