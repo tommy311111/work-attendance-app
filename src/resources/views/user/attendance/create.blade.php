@@ -13,7 +13,7 @@
 
     {{-- 今日の日付 --}}
     <div class="attendance__date">
-        {{ $today->format('Y年n月j日') }}（{{ $weekdayJapanese }}）
+        {{ $today->format('Y年n月j日')}}（{{ $weekdayJapanese }}）
     </div>
 
     {{-- 現在の時刻 --}}
