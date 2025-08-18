@@ -4,7 +4,7 @@ body {
 }
 
 .attendance-detail__wrapper {
-    width: 48%;
+    width: 46%;
     margin: 1rem auto;
     background-color: #f0f0f0;
     padding: 0.5rem 1rem;
@@ -113,7 +113,7 @@ textarea {
 /* PCサイズ（1400px〜1540px） */
 @media (min-width: 87.5rem) and (max-width: 96.25rem) {
     .attendance-detail__wrapper {
-        width: 48%;
+        width: 46%;
         padding: 0.5rem 1rem;
     }
 
