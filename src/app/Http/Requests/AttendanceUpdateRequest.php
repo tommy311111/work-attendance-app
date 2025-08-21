@@ -34,6 +34,14 @@ class AttendanceUpdateRequest extends FormRequest
         ];
     }
 
+    public function messages()
+{
+    return [
+        'reason.required' => '備考を記入してください。',
+        'reason.string' => '備考は文字列で入力してください。',
+    ];
+}
+
     public function withValidator($validator)
 {
     $validator->after(function ($validator) {
@@ -44,7 +52,7 @@ class AttendanceUpdateRequest extends FormRequest
 
         // 出退勤チェック
         if ($clockIn && $clockOut && $clockIn > $clockOut) {
-            $validator->errors()->add('clock_in', '出勤時間もしくは退勤時間が不適切な値です');
+            $validator->errors()->add('clock_in', '出勤時間もしくは退勤時間が不適切な値です。');
              return; // ←ここで休憩チェックをスキップ
         }
 
@@ -64,25 +72,20 @@ foreach ($data['breaks'] ?? [] as $index => $break) {
 
     // どちらかだけ入っている場合はエラーにしたいならここでチェック
     if (is_null($breakStart) xor is_null($breakEnd)) {
-        $validator->errors()->add("breaks.$index", '休憩時間は開始と終了を両方入力してください');
+        $validator->errors()->add("breaks.$index", '休憩時間は開始と終了を両方入力してください。');
         continue;
     }
 
     // 出退勤範囲チェック
     if ($clockIn && $breakStart && ($breakStart < $clockIn || $breakStart > $clockOut)) {
-        $validator->errors()->add("breaks.$index.break_start", '休憩時間が不適切な値です');
+        $validator->errors()->add("breaks.$index.break_start", '休憩時間が不適切な値です。');
     }
 
     if ($clockOut && $breakEnd && $breakEnd > $clockOut) {
-        $validator->errors()->add("breaks.$index.break_end", '休憩時間もしくは退勤時間が不適切な値です');
+        $validator->errors()->add("breaks.$index.break_end", '休憩時間もしくは退勤時間が不適切な値です。');
     }
 }
 
-
-        // 備考欄チェック
-        if (!isset($data['reason']) || trim($data['reason']) === '') {
-            $validator->errors()->add('reason', '備考を記入してください');
-        }
     });
 }
 
