@@ -16,6 +16,7 @@ class AdminRequestController extends Controller
 {
     public function update(AttendanceUpdateRequest $request, $id)
     {
+
         // 管理者チェック（ポリシーなどでやっていれば不要）
         if (Auth::user()->role !== 'admin') {
             abort(403);
@@ -36,24 +37,33 @@ class AdminRequestController extends Controller
             'clock_out' => $clockOut,
         ]);
 
-        // 休憩時間の更新（breaks.*.idが指定されている前提）
         if (!empty($request->breaks)) {
-            foreach ($request->breaks as $breakInput) {
-                if (!empty($breakInput['id'])) {
-                    $break = $attendance->breaks->firstWhere('id', $breakInput['id']);
-                    if ($break) {
-                        $break->update([
-                            'break_start_at' => !empty($breakInput['break_start'])
-                                ? Carbon::createFromFormat('Y-m-d H:i', "$date {$breakInput['break_start']}")
-                                : null,
-                            'break_end_at' => !empty($breakInput['break_end'])
-                                ? Carbon::createFromFormat('Y-m-d H:i', "$date {$breakInput['break_end']}")
-                                : null,
-                        ]);
-                    }
-                }
+    foreach ($request->breaks as $breakInput) {
+        if (!empty($breakInput['id'])) {
+            // 既存の休憩を更新
+            $break = $attendance->breaks->firstWhere('id', $breakInput['id']);
+            if ($break) {
+                $break->update([
+                    'break_start_at' => !empty($breakInput['break_start'])
+                        ? Carbon::createFromFormat('Y-m-d H:i', "$date {$breakInput['break_start']}")
+                        : null,
+                    'break_end_at' => !empty($breakInput['break_end'])
+                        ? Carbon::createFromFormat('Y-m-d H:i', "$date {$breakInput['break_end']}")
+                        : null,
+                ]);
+            }
+        } else {
+            // 新しい休憩を作成
+            if (!empty($breakInput['break_start']) && !empty($breakInput['break_end'])) {
+                $attendance->breaks()->create([
+                    'break_start_at' => Carbon::createFromFormat('Y-m-d H:i', "$date {$breakInput['break_start']}"),
+                    'break_end_at' => Carbon::createFromFormat('Y-m-d H:i', "$date {$breakInput['break_end']}"),
+                ]);
             }
         }
+    }
+}
+
 
         return redirect()->route('admin.attendance.index')
             ->with('success', '勤怠データを更新しました。');

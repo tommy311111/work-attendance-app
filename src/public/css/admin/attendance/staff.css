@@ -108,6 +108,11 @@
     font-size: 14px;
 }
 
+.admin-attendance-list__detail-link {
+    color: #000;
+    text-decoration: none;
+    font-weight: 500;
+}
 
 /* -----------------------------
     レスポンシブ対応
@@ -121,7 +126,7 @@
     }
 
     .attendance-list__title {
-        font-size: 1.6rem;
+        font-size: 1.5rem;
     }
 
     .attendance-list__current-month {

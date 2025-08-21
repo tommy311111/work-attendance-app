@@ -59,20 +59,22 @@
                                 {{ $attendance->work_duration_formatted !== '-' ? $attendance->work_duration_formatted : '' }}
                             </td>
                              <td>
-            {{-- request_status はコントローラでセット済み --}}
-            @if ($attendance->request_status === 'approved')
-                <a href="{{ route('attendance.show', $attendance->id) }}" class="attendance-list__detail-link">詳細</a>
-            @elseif ($attendance->request_status === 'pending')
-                {{-- もし編集画面へのリンクも必要なら --}}
-                @php
-                    // 最新の申請を取得
-                    $latestRequest = $attendance->attendanceRequests->sortByDesc('created_at')->first();
-                @endphp
-                <a href="{{ route('attendance-requests.edit', $latestRequest->id) }}" class="attendance-list__detail-link">詳細</a>
-            @else
-                <a href="{{ route('attendance.show', $attendance->id) }}" class="attendance-list__detail-link">詳細</a>
-            @endif
-        </td>
+    @php
+        // 最新の申請を取得
+        $latestRequest = $attendance->attendanceRequests->sortByDesc('created_at')->first();
+    @endphp
+
+    @if ($latestRequest && $latestRequest->status === 'pending')
+        <a href="{{ route('stamp_correction_request.approve_form', $latestRequest->id) }}" class="admin-attendance-list__detail-link">
+            詳細
+        </a>
+    @else
+        <a href="{{ route('admin.attendance.show', $attendance->id) }}" class="admin-attendance-list__detail-link">
+            詳細
+        </a>
+    @endif
+</td>
+
 
 
                         </tr>
