@@ -56,6 +56,10 @@ body {
     text-align: left;
 }
 
+.attendance-detail__spacer {
+  display: inline-block;
+  width: 4rem;
+}
 
 .attendance-detail__table input[type="time"],
 .attendance-detail__table textarea {

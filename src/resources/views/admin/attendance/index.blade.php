@@ -60,16 +60,22 @@
                             <td>{{ $attendance->total_break_time_formatted }}</td>
                             <td>{{ $attendance->work_duration_formatted !== '-' ? $attendance->work_duration_formatted : '' }}</td>
                             <td>
-    @if ($attendance->request_status === 'pending')
-        @php
-            $latestRequest = $attendance->attendanceRequests->sortByDesc('created_at')->first();
-        @endphp
-        <a href="{{ route('attendance-requests.edit', $latestRequest->id) }}" class="admin-attendance-list__detail-link">詳細</a>
-    @else
-        <a href="{{ route('admin.attendance.show', $attendance->id) }}" class="admin-attendance-list__detail-link">詳細</a>
+    @php
+        // 最新の申請を取得
+        $latestRequest = $attendance->attendanceRequests->sortByDesc('created_at')->first();
+    @endphp
 
+    @if ($latestRequest && $latestRequest->status === 'pending')
+        <a href="{{ route('stamp_correction_request.approve_form', $latestRequest->id) }}" class="admin-attendance-list__detail-link">
+            詳細
+        </a>
+    @else
+        <a href="{{ route('admin.attendance.show', $attendance->id) }}" class="admin-attendance-list__detail-link">
+            詳細
+        </a>
     @endif
 </td>
+
 
                         </tr>
                     @empty
