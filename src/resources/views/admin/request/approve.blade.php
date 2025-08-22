@@ -23,7 +23,7 @@
                 <th>日付</th>
                 <td class="approve-request__text">
                     {{ \Carbon\Carbon::parse($attendance->date)->format('Y年') }}
-                    <span style="display:inline-block; width:5.7rem;"></span>
+                    <span class="attendance-detail__spacer" aria-hidden="true"></span>
                     {{ \Carbon\Carbon::parse($attendance->date)->format('n月 j日') }}
                 </td>
             </tr>

@@ -72,10 +72,6 @@
     font-weight: bold;
 }
 
-.staff-list__link:hover {
-    text-decoration: underline;
-}
-
 /* =============================
     レスポンシブ対応
 ============================= */
