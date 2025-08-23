@@ -10,38 +10,33 @@ use Carbon\CarbonPeriod;
 class AttendanceSeeder extends Seeder
 {
     public function run(): void
-{
-    $users = User::where('role', 'employee')->take(3)->get();
-    $period = CarbonPeriod::create('2025-07-01', '2025-09-30');
+    {
+        $users = User::where('role', 'employee')->take(3)->get();
+        $period = CarbonPeriod::create('2025-07-01', '2025-09-30');
 
-    foreach ($users as $user) {
-        $workDayCounter = 0;
+        foreach ($users as $user) {
+            $workDayCounter = 0;
 
-        foreach ($period as $date) {
-            // 5日働いたら2日休むルール
-            $isWorkDay = ($workDayCounter < 5);
+            foreach ($period as $date) {
+                $isWorkDay = ($workDayCounter < 5);
 
-            if ($isWorkDay) {
-    Attendance::factory()->create([
-        'user_id' => $user->id,
-        'date' => $date->format('Y-m-d'),
-    ]);
-} else {
-    Attendance::factory()->offWork()->create([
-        'user_id' => $user->id,
-        'date' => $date->format('Y-m-d'),
-    ]);
-}
+                if ($isWorkDay) {
+                    Attendance::factory()->create([
+                        'user_id' => $user->id,
+                        'date' => $date->format('Y-m-d'),
+                    ]);
+                } else {
+                    Attendance::factory()->offWork()->create([
+                        'user_id' => $user->id,
+                        'date' => $date->format('Y-m-d'),
+                    ]);
+                }
 
-
-            // カウンタ更新
-            $workDayCounter++;
-            if ($workDayCounter >= 7) {
-                $workDayCounter = 0;
+                $workDayCounter++;
+                if ($workDayCounter >= 7) {
+                    $workDayCounter = 0;
+                }
             }
         }
     }
 }
-
-}
-
