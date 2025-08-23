@@ -8,23 +8,17 @@ use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\Http\Controllers\Controller;
 use App\Models\BreakTime;
-use App\Models\AttendanceRequest;
-use App\Models\AttendanceRequestBreak;
-use App\Http\Requests\AttendanceUpdateRequest;
 
 class UserAttendanceController extends Controller
 {
-    // 勤怠画面の表示
     public function create()
     {
         $user = Auth::user();
         $today = Carbon::today();
 
-        // 曜日を日本語1文字で取得
-    $weekDays = ['日', '月', '火', '水', '木', '金', '土'];
-    $weekdayJapanese = $weekDays[$today->dayOfWeek];
+        $weekDays = ['日', '月', '火', '水', '木', '金', '土'];
+        $weekdayJapanese = $weekDays[$today->dayOfWeek];
 
-        // 定数配列の値を使って初期状態セット
         $attendance = Attendance::firstOrCreate(
             ['user_id' => $user->id, 'date' => $today->toDateString()],
             ['status' => Attendance::STATUS['OFF_DUTY']]
@@ -33,7 +27,6 @@ class UserAttendanceController extends Controller
         return view('user.attendance.create', compact('attendance', 'today', 'weekdayJapanese'));
     }
 
-    // 勤怠ステータス変更
     public function updateStatus(Request $request)
     {
         $user = Auth::user();
@@ -45,7 +38,6 @@ class UserAttendanceController extends Controller
 
         $action = $request->input('action');
 
-        // すでに出勤していたらリダイレクト（重複防止）
         if ($action === 'start_work' && $attendance->clock_in) {
             return back()->withErrors(['action' => 'すでに出勤済みです。']);
         }
@@ -74,7 +66,6 @@ class UserAttendanceController extends Controller
                     $latestBreak->break_end_at = now();
                     $latestBreak->save();
                 }
-                // 休憩戻り時は「出勤中」に戻す
                 $attendance->status = Attendance::STATUS['WORKING'];
                 break;
 
@@ -83,7 +74,6 @@ class UserAttendanceController extends Controller
                 $attendance->clock_out = now();
                 $attendance->save();
                 return redirect()->route('attendance.create');
-                break;
         }
 
         $attendance->save();
@@ -92,53 +82,42 @@ class UserAttendanceController extends Controller
     }
 
     public function index(Request $request)
-{
-    $user = Auth::user();
+    {
+        $user = Auth::user();
 
-    // 表示対象の年月を取得（なければ今月）
-    $month = $request->input('month', Carbon::now()->format('Y-m'));
-    $parsedMonth = Carbon::createFromFormat('Y-m', $month);
+        $month = $request->input('month', Carbon::now()->format('Y-m'));
+        $parsedMonth = Carbon::createFromFormat('Y-m', $month);
 
-    // 勤怠情報＋その休憩情報もまとめて取得
-    $attendances = Attendance::with('breaks', 'attendanceRequests') // ← ここ
-        ->where('user_id', $user->id)
-        ->where('date', 'like', "$month%")
-        ->orderBy('date', 'asc')
-        ->get();
+        $attendances = Attendance::with('breaks', 'attendanceRequests')
+            ->where('user_id', $user->id)
+            ->where('date', 'like', "$month%")
+            ->orderBy('date', 'asc')
+            ->get();
 
-// 各勤怠に status を追加（pending/approved/none）
-    $attendances = $attendances->map(function ($attendance) {
-        $latestRequest = $attendance->attendanceRequests->sortByDesc('created_at')->first();
-        if ($latestRequest) {
-            $attendance->request_status = $latestRequest->status; // 例: 'pending', 'approved'
-        } else {
-            $attendance->request_status = null;
-        }
-        return $attendance;
-    });
+        $attendances = $attendances->map(function ($attendance) {
+            $latestRequest = $attendance->attendanceRequests->sortByDesc('created_at')->first();
+            $attendance->request_status = $latestRequest ? $latestRequest->status : null;
+            return $attendance;
+        });
 
-    return view('user.attendance.index', [
-        'attendances' => $attendances,
-        'currentMonth' => $parsedMonth,
-    ]);
-}
-    // 勤怠画面の表示
+        return view('user.attendance.index', [
+            'attendances' => $attendances,
+            'currentMonth' => $parsedMonth,
+        ]);
+    }
+
     public function show($id)
     {
         $attendance = Attendance::findOrFail($id);
         $breaks = $attendance->breaks;
         $user = $attendance->user;
 
+        $isPendingApproval = $attendance->attendanceRequests()->where('status', 'pending')->exists();
 
-        // 修正申請が「承認待ち」のものがあるか判定
-    $isPendingApproval = $attendance->attendanceRequests()->where('status', 'pending')->exists();
-
-    if ($isPendingApproval) {
-        return view('user.attendance.request_pending', compact('attendance', 'user', 'breaks'));
-    } else {
-        return view('user.attendance.show', compact('attendance', 'user', 'breaks'));
+        if ($isPendingApproval) {
+            return view('user.attendance.request_pending', compact('attendance', 'user', 'breaks'));
+        } else {
+            return view('user.attendance.show', compact('attendance', 'user', 'breaks'));
+        }
     }
-    }
-
-
 }
