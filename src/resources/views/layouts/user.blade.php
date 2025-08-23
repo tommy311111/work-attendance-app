@@ -13,26 +13,32 @@
 <body>
 
     <header class="header">
-        <h1 class="header__logo">
+        <div class="header__logo">
             <a href="{{ route('attendance.create') }}">
                 <img src="{{ asset('storage/images/logo.svg') }}" alt="COACHTECH">
             </a>
-        </h1>
+        </div>
 
         @if (!in_array(Route::currentRouteName(), ['register.form', 'login']))
-        <nav class="header-nav">
-            <ul class="header-nav-list">
-                <li class="header-nav-item"><a href="{{ route('attendance.create') }}">勤怠</a></li>
-                <li class="header-nav-item"><a href="{{ route('attendance.index') }}">勤怠一覧</a></li>
-                <li class="header-nav-item"><a href="{{ route('attendance_requests.list') }}">申請</a></li>
-                <li class="header-nav-item">
-                    <form action="/logout" method="POST" class="logout-form">
-                        @csrf
-                        <button type="submit" class="logout-button">ログアウト</button>
-                    </form>
-                </li>
-            </ul>
-        </nav>
+            <nav class="header-nav">
+                <ul class="header-nav-list">
+                    <li class="header-nav-item">
+                        <a href="{{ route('attendance.create') }}">勤怠</a>
+                    </li>
+                    <li class="header-nav-item">
+                        <a href="{{ route('attendance.index') }}">勤怠一覧</a>
+                    </li>
+                    <li class="header-nav-item">
+                        <a href="{{ route('attendance_requests.list') }}">申請</a>
+                    </li>
+                    <li class="header-nav-item">
+                        <form action="/logout" method="POST" class="logout-form">
+                            @csrf
+                            <button type="submit" class="logout-button">ログアウト</button>
+                        </form>
+                    </li>
+                </ul>
+            </nav>
         @endif
     </header>
 
