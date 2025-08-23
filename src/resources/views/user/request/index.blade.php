@@ -1,7 +1,7 @@
 @extends('layouts.user')
 
 @section('css')
-    <link rel="stylesheet" href="{{ asset('css/user/request/index.css') }}">
+<link rel="stylesheet" href="{{ asset('css/user/request/index.css') }}">
 @endsection
 
 @section('content')
@@ -18,6 +18,7 @@
            承認済み
         </a>
     </div>
+
     <div class="request-list__divider"></div>
 
     <div class="request-list__table-container">
@@ -34,31 +35,30 @@
             </thead>
             <tbody>
                 @forelse ($requests as $request)
-                    <tr>
-                        <td>
-                            {{ $request->status === 'pending' ? '承認待ち' : '承認済み' }}
-                        </td>
-                        <td>{{ Auth::user()->name }}</td>
-                        <td>{{ $request->attendance->date->format('Y/m/d') }}</td>
-                        <td>{{ $request->reason }}</td>
-                        <td>{{ $request->created_at->format('Y/m/d') }}</td>
-                        <td>
-    @if ($request->status === 'approved')
-        <a href="{{ route('attendance.show', $request->attendance_id) }}" class="request-list__detail-link">
-            詳細
-        </a>
-    @else
-        <a href="{{ route('attendance-requests.edit', $request->id) }}" class="request-list__detail-link">
-            詳細
-        </a>
-    @endif
-</td>
-
-                    </tr>
+                <tr>
+                    <td>
+                        {{ $request->status === 'pending' ? '承認待ち' : '承認済み' }}
+                    </td>
+                    <td>{{ Auth::user()->name }}</td>
+                    <td>{{ $request->attendance->date->format('Y/m/d') }}</td>
+                    <td>{{ $request->reason }}</td>
+                    <td>{{ $request->created_at->format('Y/m/d') }}</td>
+                    <td>
+                        @if ($request->status === 'approved')
+                            <a href="{{ route('attendance.show', $request->attendance_id) }}" class="request-list__detail-link">
+                                詳細
+                            </a>
+                        @else
+                            <a href="{{ route('attendance-requests.edit', $request->id) }}" class="request-list__detail-link">
+                                詳細
+                            </a>
+                        @endif
+                    </td>
+                </tr>
                 @empty
-                    <tr>
-                        <td colspan="6">申請がありません。</td>
-                    </tr>
+                <tr>
+                    <td colspan="6">申請がありません。</td>
+                </tr>
                 @endforelse
             </tbody>
         </table>
