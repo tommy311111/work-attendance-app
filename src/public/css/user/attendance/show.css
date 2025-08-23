@@ -40,8 +40,6 @@ body {
     border-bottom: 3px solid #f0f0f0;
 }
 
-
-
 .attendance-detail__table th {
     text-align: left;
     color: #888;
@@ -57,8 +55,8 @@ body {
 }
 
 .attendance-detail__spacer {
-  display: inline-block;
-  width: 4rem;
+    display: inline-block;
+    width: 4rem;
 }
 
 .attendance-detail__table input[type="time"],
@@ -86,7 +84,7 @@ textarea {
 
 .attendance-detail__submit {
     text-align: right;
-    margin-top: 1.0rem;
+    margin-top: 1rem;
 }
 
 .attendance-detail__submit button {
@@ -110,11 +108,6 @@ textarea {
     font-weight: normal;
 }
 
-/* -----------------------------
-    レスポンシブ対応
------------------------------ */
-
-/* PCサイズ（1400px〜1540px） */
 @media (min-width: 87.5rem) and (max-width: 96.25rem) {
     .attendance-detail__wrapper {
         width: 46%;
@@ -135,14 +128,12 @@ textarea {
         font-size: 1rem;
     }
 
-
     .attendance-detail__submit button {
         font-size: 1.1rem;
         padding: 0.5rem 2.5rem;
     }
 }
 
-/* タブレットサイズ（768px〜850px） */
 @media (min-width: 48rem) and (max-width: 53.125rem) {
     .attendance-detail__wrapper {
         width: 70%;
@@ -154,7 +145,7 @@ textarea {
         text-align: left;
     }
 
-    .attendance-detail__table th{
+    .attendance-detail__table th {
         padding: 0.5rem 0.5rem 0.5rem 2rem;
         font-size: 0.9rem;
     }

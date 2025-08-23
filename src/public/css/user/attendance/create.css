@@ -77,10 +77,6 @@
     padding-left: 1.5rem;
 }
 
-/* -----------------------------
-    レスポンシブ対応
------------------------------ */
-
 @media (max-width: 850px) {
     .attendance__content {
         padding-top: 8rem;
@@ -106,7 +102,6 @@
     }
 }
 
-/* === PCサイズ微調整（1400px〜1540px） === */
 @media (max-width: 1540px) {
     .attendance__content {
         padding-top: 9rem;
