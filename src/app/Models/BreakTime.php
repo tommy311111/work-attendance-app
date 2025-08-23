@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class BreakTime extends Model
 {
     use HasFactory;
+
     protected $table = 'breaks';
 
     protected $guarded = [
@@ -16,7 +17,7 @@ class BreakTime extends Model
 
     public function attendance()
     {
-    return $this->belongsTo(Attendance::class);
+        return $this->belongsTo(Attendance::class);
     }
 
     public function attendanceRequestBreaks()
@@ -25,8 +26,7 @@ class BreakTime extends Model
     }
 
     protected $casts = [
-    'break_start_at' => 'datetime',
-    'break_end_at' => 'datetime',
-];
-
+        'break_start_at' => 'datetime',
+        'break_end_at' => 'datetime',
+    ];
 }

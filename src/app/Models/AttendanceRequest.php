@@ -15,12 +15,12 @@ class AttendanceRequest extends Model
 
     public function user()
     {
-    return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class);
     }
 
     public function attendance()
     {
-    return $this->belongsTo(Attendance::class);
+        return $this->belongsTo(Attendance::class);
     }
 
     public function attendanceRequestBreaks()

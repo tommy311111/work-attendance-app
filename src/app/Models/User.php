@@ -13,11 +13,6 @@ class User extends Authenticatable implements MustVerifyEmail
 {
     use HasApiTokens, HasFactory, Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
     protected $fillable = [
         'name',
         'email',
@@ -25,43 +20,32 @@ class User extends Authenticatable implements MustVerifyEmail
         'role',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
 
     public function attendances()
     {
-    return $this->hasMany(Attendance::class);
+        return $this->hasMany(Attendance::class);
     }
 
     public function breaks()
     {
-    return $this->hasMany(BreakTime::class);
+        return $this->hasMany(BreakTime::class);
     }
 
     public function attendanceRequests()
     {
-    return $this->hasMany(AttendanceRequest::class);
+        return $this->hasMany(AttendanceRequest::class);
     }
 
     public function sendEmailVerificationNotification()
     {
         $this->notify(new CustomVerifyEmail());
     }
-
 }

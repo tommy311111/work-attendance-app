@@ -15,17 +15,16 @@ class AttendanceRequestBreak extends Model
 
     public function attendanceRequest()
     {
-    return $this->belongsTo(AttendanceRequest::class);
+        return $this->belongsTo(AttendanceRequest::class);
     }
 
     public function breakTime()
     {
-    return $this->belongsTo(BreakTime::class);
+        return $this->belongsTo(BreakTime::class);
     }
 
     protected $casts = [
-    'requested_start_time' => 'datetime',
-    'requested_end_time' => 'datetime',
-];
-
+        'requested_start_time' => 'datetime',
+        'requested_end_time' => 'datetime',
+    ];
 }
