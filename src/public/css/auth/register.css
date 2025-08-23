@@ -18,7 +18,7 @@ h1.register-form__heading-title {
 
 .register-form {
     margin: 0 auto;
-    width: 31.25rem; /* = 500px */
+    width: 31.25rem;
     max-width: 100%;
 }
 
@@ -83,11 +83,6 @@ h2.form__group-title {
     text-decoration: none;
 }
 
-/* -----------------------------
-    レスポンシブ対応
------------------------------ */
-
-/* タブレット用 (768px〜850px) */
 @media screen and (max-width: 850px) {
     .register-form {
         width: 90%;
@@ -106,7 +101,6 @@ h2.form__group-title {
     }
 }
 
-/* スマホサイズ (〜767px) */
 @media screen and (max-width: 767px) {
     .register__content {
         padding: 1.5rem;
@@ -130,7 +124,6 @@ h2.form__group-title {
     }
 }
 
-/* ワイドPC対応（~1540pxでも中央寄せを保つ） */
 @media screen and (min-width: 1400px) {
     .register-form {
         width: 31.25rem;

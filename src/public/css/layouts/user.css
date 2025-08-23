@@ -38,102 +38,87 @@ body {
     font-size: 24px;
     width: 80px;
 }
+
 .header-nav-list {
     display: flex;
     font-weight: bold;
     list-style: none;
 }
+
 .header-nav-item:not(:last-child) {
     margin-right: 30px;
 }
 
 .logout-form {
-  margin: 0; /* <form>の余白を消す */
+    margin: 0;
 }
 
 .logout-button {
-  background: none;
-  border: none;
-  color: #fff; /* 他のリンクと同じ色 */
-  text-decoration: none;
-  cursor: pointer;
-  font-size: inherit;
-  padding: 0;
-}
-.logout-button:hover {
-  opacity: 0.8;
+    background: none;
+    border: none;
+    color: #fff;
+    text-decoration: none;
+    cursor: pointer;
+    font-size: inherit;
+    padding: 0;
+    font-weight: bold;
 }
 
-.logout-button {
-  background: none;
-  border: none;
-  color: #fff; /* 他のリンクと同じ色 */
-  text-decoration: none;
-  cursor: pointer;
-  font-size: inherit;
-  padding: 0;
-  font-weight: bold;
-}
 .logout-button:hover {
-  opacity: 0.8;
+    opacity: 0.8;
 }
-
-/* -----------------------------
-    レスポンシブ対応
------------------------------ */
 
 @media screen and (max-width: 1540px) {
-  .header {
-    padding: 0 2rem;
-  }
+    .header {
+        padding: 0 2rem;
+    }
 
-  .header__logo {
-    margin-left: 2rem;
-  }
+    .header__logo {
+        margin-left: 2rem;
+    }
 
-  .header-ttl {
-    font-size: 1.5rem;
-    width: auto;
-  }
+    .header-ttl {
+        font-size: 1.5rem;
+        width: auto;
+    }
 
-  .header-nav-item:not(:last-child) {
-    margin-right: 1.5rem;
-  }
+    .header-nav-item:not(:last-child) {
+        margin-right: 1.5rem;
+    }
 }
 
 @media screen and (max-width: 850px) {
-  .header {
-    align-items: flex-start;
-    height: auto;
-    padding: 1rem 2rem;
-    align-items: center;
-  }
+    .header {
+        align-items: center;
+        height: auto;
+        padding: 1rem 2rem;
+    }
 
-  .header__logo {
-    margin-left: 0;
-  }
+    .header__logo {
+        margin-left: 0;
+    }
 
-  .header__logo img {
-    height: 1.5rem;
-  }
+    .header__logo img {
+        height: 1.5rem;
+    }
 
-  .header-ttl {
-    font-size: 1.5rem;
-    margin-left: 0.5rem;
-  }
+    .header-ttl {
+        font-size: 1.5rem;
+        margin-left: 0.5rem;
+    }
 
-  .header-nav-list {
-    flex-direction: row;
-    gap: 0.75rem;
-    padding: 0;
-    margin: 0;
-  }
+    .header-nav-list {
+        flex-direction: row;
+        gap: 0.75rem;
+        padding: 0;
+        margin: 0;
+    }
 
-  .header-nav-item:not(:last-child) {
-    margin-right: 1.5rem;
-  }
+    .header-nav-item:not(:last-child) {
+        margin-right: 1.5rem;
+    }
 
-  .logout-button {
-    font-size: 1rem;
-  }
+    .logout-button {
+        font-size: 1rem;
+    }
 }

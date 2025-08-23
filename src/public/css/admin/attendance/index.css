@@ -66,7 +66,7 @@
     margin-right: 0.5rem;
 }
 
-.admin-attendance-list__current-date{
+.admin-attendance-list__current-date {
     font-weight: 600;
 }
 
@@ -97,11 +97,6 @@
     font-weight: 500;
 }
 
-/* -----------------------------
-    レスポンシブ対応
------------------------------ */
-
-/* PC（1400px〜1540px）向け微調整 */
 @media (min-width: 1400px) and (max-width: 1540px) {
     .admin-attendance-list__content {
         width: 50%;
@@ -117,7 +112,6 @@
     }
 }
 
-/* タブレット（768px〜850px）対応 */
 @media (min-width: 768px) and (max-width: 850px) {
     .admin-attendance-list__content {
         width: 80%;

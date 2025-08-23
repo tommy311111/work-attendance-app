@@ -69,12 +69,6 @@
     cursor: pointer;
 }
 
-
-/* -----------------------------
-    レスポンシブ対応
------------------------------ */
-
-/* ✅ PC対応: 1400px〜1540px */
 @media (min-width: 87.5rem) and (max-width: 96.25rem) {
     .login__content {
         padding: 2.5rem;
@@ -85,7 +79,6 @@
     }
 }
 
-/* ✅ タブレット対応: 768px〜850px */
 @media (min-width: 48rem) and (max-width: 53.125rem) {
     .login__content {
         padding: 2rem;

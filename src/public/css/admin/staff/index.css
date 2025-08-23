@@ -1,6 +1,3 @@
-/* =============================
-    スタッフ一覧：全体レイアウト
-============================= */
 .staff-list__wrapper {
     background-color: #f0f0f0;
     min-height: 100vh;
@@ -15,9 +12,6 @@
     font-family: sans-serif;
 }
 
-/* =============================
-    タイトル（見出し）
-============================= */
 .staff-list__title::before {
     content: "";
     display: inline-block;
@@ -37,9 +31,6 @@
     color: #333;
 }
 
-/* =============================
-    テーブル
-============================= */
 .staff-list__table {
     width: 100%;
     background-color: #fff;
@@ -63,20 +54,12 @@
     border-bottom: 3px solid #ddd;
 }
 
-/* =============================
-    詳細リンク
-============================= */
 .staff-list__link {
     color: #000000;
     text-decoration: none;
     font-weight: bold;
 }
 
-/* =============================
-    レスポンシブ対応
-============================= */
-
-/* PC（1400px〜1540px）向け微調整 */
 @media (min-width: 1400px) and (max-width: 1540px) {
     .staff-list__content {
         width: 50%;
@@ -88,7 +71,6 @@
     }
 }
 
-/* タブレット（768px〜850px）対応 */
 @media (min-width: 768px) and (max-width: 850px) {
     .staff-list__content {
         width: 80%;

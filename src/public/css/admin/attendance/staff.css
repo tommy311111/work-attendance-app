@@ -95,8 +95,8 @@
 
 .attendance-list__csv-wrapper {
     display: flex;
-    justify-content: flex-end; /* 子要素を右端に寄せる */
-    margin-top: 1.25rem; /* テーブルとの間隔 */
+    justify-content: flex-end;
+    margin-top: 1.25rem;
 }
 
 .attendance-list__csv-button {
@@ -114,11 +114,6 @@
     font-weight: 500;
 }
 
-/* -----------------------------
-    レスポンシブ対応
------------------------------ */
-
-/* PC（1400px〜1540px）向け微調整 */
 @media (min-width: 1400px) and (max-width: 1540px) {
     .attendance-list__content {
         width: 50%;
@@ -134,7 +129,6 @@
     }
 }
 
-/* タブレット（768px〜850px）対応 */
 @media (min-width: 768px) and (max-width: 850px) {
     .attendance-list__content {
         width: 80%;
@@ -174,4 +168,3 @@
         padding: 0.4rem;
     }
 }
-

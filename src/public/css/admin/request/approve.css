@@ -55,8 +55,8 @@ body {
 }
 
 .attendance-detail__spacer {
-  display: inline-block;
-  width: 3.8rem;
+    display: inline-block;
+    width: 3.8rem;
 }
 
 .approve-request__table input[type="time"],
@@ -95,13 +95,11 @@ textarea {
     cursor: pointer;
 }
 
-/* 承認ボタン（黒背景・白文字） */
 .approve-request__button--approve {
     background-color: #000000;
     color: #fff;
 }
 
-/* 承認済みボタン（グレー背景・白文字） */
 .approve-request__button--approved {
     background-color: #888888;
     color: #fff;
@@ -114,11 +112,6 @@ textarea {
     margin-top: 0.25rem;
 }
 
-/* -----------------------------
-    レスポンシブ対応
------------------------------ */
-
-/* PCサイズ（1400px〜1540px） */
 @media (min-width: 87.5rem) and (max-width: 96.25rem) {
     .approve-request__wrapper {
         width: 44%;
@@ -129,7 +122,7 @@ textarea {
         font-size: 1.6rem;
     }
 
-    .approve-request__table th{
+    .approve-request__table th {
         padding: 1rem;
         padding-left: 2.25rem;
         font-size: 1rem;
@@ -146,7 +139,6 @@ textarea {
     }
 }
 
-/* タブレットサイズ（768px〜850px） */
 @media (min-width: 48rem) and (max-width: 53.125rem) {
     .approve-request__wrapper {
         width: 70%;
