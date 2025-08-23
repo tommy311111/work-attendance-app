@@ -11,11 +11,11 @@
     <div class="request-list__tabs">
         <a href="{{ route('attendance_requests.list', ['status' => 'pending']) }}"
            class="request-list__tab {{ request('status') === 'pending' ? 'request-list__tab--active' : '' }}">
-           承認待ち
+            承認待ち
         </a>
         <a href="{{ route('attendance_requests.list', ['status' => 'approved']) }}"
            class="request-list__tab {{ request('status') === 'approved' ? 'request-list__tab--active' : '' }}">
-           承認済み
+            承認済み
         </a>
     </div>
     <div class="request-list__divider"></div>
@@ -43,11 +43,10 @@
                         <td>{{ $request->reason }}</td>
                         <td>{{ $request->created_at->format('Y/m/d') }}</td>
                         <td>
-    <a href="{{ route('stamp_correction_request.approve_form', $request->id) }}" class="request-list__detail-link">
-        詳細
-    </a>
-</td>
-
+                            <a href="{{ route('stamp_correction_request.approve_form', $request->id) }}" class="request-list__detail-link">
+                                詳細
+                            </a>
+                        </td>
                     </tr>
                 @empty
                     <tr>
