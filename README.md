@@ -1,8 +1,8 @@
-# kintai-app
+# work-attendance-app
 
 ## 環境構築
 **Dockerビルド**
-1. `git clone git@github.com:tommy311111/flea-market-app.git`
+1. `git clone git@github.com:tommy311111/work-attendance-app.git`
 2. DockerDesktopアプリを立ち上げる
 3. `docker-compose up -d --build`
 
@@ -58,7 +58,7 @@ MAIL_USERNAME=あなたのMailtrapユーザー名
 MAIL_PASSWORD=あなたのMailtrapパスワード
 MAIL_ENCRYPTION=tls
 MAIL_FROM_ADDRESS=noreply@example.com
-MAIL_FROM_NAME="Flea Market App"
+MAIL_FROM_NAME="work attendance App"
 ```
  パスワードは一部しか表示されないため、「Copy」ボタンで全体をコピーしないと正しく取得できません。
 
@@ -111,13 +111,12 @@ php artisan test --env=testing
 ## テストユーザー情報（初期データ）
 
 開発環境またはテスト環境でログイン確認するためのテストユーザーがあらかじめ用意されています。 ※ 全ユーザーのパスワードは共通で `password` です
-| 名前    | メールアドレス                                           | パスワード    | 出品         | 購入 | コメント | いいね | 役割               |
-| ----- | ------------------------------------------------- | -------- | ---------- | -- | ---- | --- | ---------------- |
-| 佐藤 美咲 | [misaki@example.com](mailto:misaki@example.com)   | password | 6件（未販売）    | なし | 0件   | 0件  | 出品のみを行う出品専用ユーザー  |
-| 鈴木 大輔 | [daisuke@example.com](mailto:daisuke@example.com) | password | 1件（売却）     | 1件 | 0件   | 0件  | 出品と購入を1回ずつ経験済み   |
-| 高橋 結衣 | [yui@example.com](mailto:yui@example.com)         | password | 3件（うち2つ売却） | -  | 7件   | 7件  | アクティブなコメント＆いいね担当 |
-| 田中 直人 | [naoto@example.com](mailto:naoto@example.com)     | password | 0件         | 2件 | 5件   | 6件  | 購入＋コメント／いいね担当    |
-| 伊藤 紗季 | [saki@example.com](mailto:saki@example.com)       | password | 0件         | 0件 | 2件   | 4件  | 閲覧ユーザー（軽めのアクション） |
+| 名前       | メールアドレス         | パスワード | 権限    |
+|------------|------------------------|------------|---------|
+| 佐藤 太郎  | admin@example.com      | password   | admin   |
+| 鈴木 花子  | suzuki@example.com     | password   | employee|
+| 佐々木 薫  | sasaki@example.com     | password   | employee|
+| 高橋 健一  | takahashi@example.com  | password   | employee|
 
 > セキュリティ上、本番環境には **このテストユーザーを残さないようにしてください**。
 
