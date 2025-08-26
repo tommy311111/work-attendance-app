@@ -130,6 +130,19 @@ php artisan test --env=testing
 
 ## テーブル設計
 
+usersテーブル
+| カラム名                | 型               | PRIMARY KEY | UNIQUE KEY | NOT NULL               | FOREIGN KEY |
+| ------------------- | --------------- | ----------- | ---------- | ---------------------- | ----------- |
+| id                  | unsigned bigint | ○           |            | ○                      |             |
+| name                | varchar(255)    |             |            | ○                      |             |
+| email               | varchar(255)    |             | ○          | ○                      |             |
+| email\_verified\_at | timestamp       |             |            |                        |             |
+| password            | varchar(255)    |             |            | ○                      |             |
+| role                | varchar(255)    |             |            | ○ (default 'employee') |             |
+| remember\_token     | varchar(100)    |             |            |                        |             |
+| created\_at         | timestamp       |             |            |                        |             |
+| updated\_at         | timestamp       |             |            |                        |             |
+
 
 ## ER図
 
