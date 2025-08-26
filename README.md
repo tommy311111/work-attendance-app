@@ -130,7 +130,7 @@ php artisan test --env=testing
 
 ## テーブル設計
 
-usersテーブル
+### usersテーブル
 | カラム名                | 型               | PRIMARY KEY | UNIQUE KEY | NOT NULL               | FOREIGN KEY |
 | ------------------- | --------------- | ----------- | ---------- | ---------------------- | ----------- |
 | id                  | unsigned bigint | ○           |            | ○                      |             |
@@ -143,22 +143,78 @@ usersテーブル
 | created\_at         | timestamp       |             |            |                        |             |
 | updated\_at         | timestamp       |             |            |                        |             |
 
+### attendances テーブル
+| カラム名        | 型               | PRIMARY KEY | UNIQUE KEY       | NOT NULL          | FOREIGN KEY |
+| ----------- | --------------- | ----------- | ---------------- | ----------------- | ----------- |
+| id          | unsigned bigint | ○           |                  | ○                 |             |
+| user\_id    | unsigned bigint |             |                  | ○                 | users(id)   |
+| date        | date            |             | (user\_id, date) | ○                 |             |
+| status      | varchar(20)     |             |                  | ○ (default '勤務外') |             |
+| clock\_in   | datetime        |             |                  |                   |             |
+| clock\_out  | datetime        |             |                  |                   |             |
+| created\_at | timestamp       |             |                  |                   |             |
+| updated\_at | timestamp       |             |                  |                   |             |
+
+### breaks テーブル
+| カラム名             | 型               | PRIMARY KEY | UNIQUE KEY | NOT NULL | FOREIGN KEY     |
+| ---------------- | --------------- | ----------- | ---------- | -------- | --------------- |
+| id               | unsigned bigint | ○           |            | ○        |                 |
+| attendance\_id   | unsigned bigint |             |            | ○        | attendances(id) |
+| break\_start\_at | datetime        |             |            |          |                 |
+| break\_end\_at   | datetime        |             |            |          |                 |
+| created\_at      | timestamp       |             |            |          |                 |
+| updated\_at      | timestamp       |             |            |          |                 |
+
+### attendance_requests テーブル
+| カラム名                        | 型                          | PRIMARY KEY | UNIQUE KEY | NOT NULL              | FOREIGN KEY     |
+| --------------------------- | -------------------------- | ----------- | ---------- | --------------------- | --------------- |
+| id                          | unsigned bigint            | ○           |            | ○                     |                 |
+| user\_id                    | unsigned bigint            |             |            | ○                     | users(id)       |
+| attendance\_id              | unsigned bigint            |             |            | ○                     | attendances(id) |
+| request\_type               | varchar(20)                |             |            | ○                     |                 |
+| requested\_clock\_in\_time  | timestamp                  |             |            |                       |                 |
+| requested\_clock\_out\_time | timestamp                  |             |            |                       |                 |
+| reason                      | text                       |             |            | ○                     |                 |
+| status                      | enum('pending','approved') |             |            | ○ (default 'pending') |                 |
+| reviewed\_by                | unsigned bigint            |             |            |                       | users(id)       |
+| reviewed\_at                | timestamp                  |             |            | ○                     |                 |
+| created\_at                 | timestamp                  |             |            |                       |                 |
+| updated\_at                 | timestamp                  |             |            |                       |                 |
+
+### attendance_request_breaks テーブル
+| カラム名                    | 型               | PRIMARY KEY | UNIQUE KEY | NOT NULL | FOREIGN KEY              |
+| ----------------------- | --------------- | ----------- | ---------- | -------- | ------------------------ |
+| id                      | unsigned bigint | ○           |            | ○        |                          |
+| attendance\_request\_id | unsigned bigint |             |            | ○        | attendance\_requests(id) |
+| break\_id               | unsigned bigint |             |            |          | breaks(id)               |
+| requested\_start\_time  | timestamp       |             |            |          |                          |
+| requested\_end\_time    | timestamp       |             |            |          |                          |
+| created\_at             | timestamp       |             |            |          |                          |
+| updated\_at             | timestamp       |             |            |          |                          |
 
 ## ER図
-
+![ER図](./er_diagram.png)
 
 ## 主な画面構成（詳細は別添のExcelを参照）
 
-- 商品一覧（トップページ）
-- 商品詳細
-- 会員登録／ログイン
-- メール認証
-- 商品出品
-- プロフィール
-- プロフィール編集
-- 商品購入
-- 送付先住所変更
->（全10画面）
+### 一般ユーザー画面
+- 会員登録画面
+- ログイン画面
+- 勤怠登録画面
+- 勤怠一覧画面
+- 勤怠詳細画面
+- 申請一覧画面
+
+### 管理者画面
+- ログイン画面
+- 勤怠一覧画面
+- 勤怠詳細画面
+- スタッフ一覧画面
+- スタッフ別勤怠一覧画面
+- 申請一覧画面
+- 修正申請承認画面
+
+> （全13画面）
 
 ## URL
 - 開発環境：http://localhost
