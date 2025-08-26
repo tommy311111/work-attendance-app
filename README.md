@@ -195,6 +195,9 @@ php artisan test --env=testing
 ## ER図
 ![ER図](./er_diagram.png)
 
+## ユースケース図
+![ユースケース図](./usecase_diagram.png_diagram.png)
+
 ## 主な画面構成（詳細は別添のExcelを参照）
 
 ### 一般ユーザー画面
