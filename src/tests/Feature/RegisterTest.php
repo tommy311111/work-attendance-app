@@ -8,7 +8,7 @@ use App\Models\User;
 
 class RegisterTest extends TestCase
 {
-        use RefreshDatabase;
+    use RefreshDatabase;
 
     /** @test */
     public function 名前が未入力の場合_バリデーションメッセージが表示される()
