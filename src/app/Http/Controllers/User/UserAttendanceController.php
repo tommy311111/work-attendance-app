@@ -19,67 +19,77 @@ class UserAttendanceController extends Controller
         $weekDays = ['日', '月', '火', '水', '木', '金', '土'];
         $weekdayJapanese = $weekDays[$today->dayOfWeek];
 
-        $attendance = Attendance::firstOrCreate(
-            ['user_id' => $user->id, 'date' => $today->toDateString()],
-            ['status' => Attendance::STATUS['OFF_DUTY']]
-        );
+        $attendance = Attendance::where('user_id', $user->id)
+    ->where('date', $today->toDateString())
+    ->first();
+
+if (!$attendance) {
+    $attendance = Attendance::create([
+        'user_id' => $user->id,
+        'date' => $today->toDateString(),
+        'status' => Attendance::STATUS['OFF_DUTY'],
+    ]);
+}
+
 
         return view('user.attendance.create', compact('attendance', 'today', 'weekdayJapanese'));
     }
 
     public function updateStatus(Request $request)
-    {
-        $user = Auth::user();
-        $today = Carbon::today()->toDateString();
+{
+    $user = Auth::user();
+    $today = Carbon::today()->toDateString();
 
-        $attendance = Attendance::where('user_id', $user->id)
-            ->where('date', $today)
-            ->firstOrFail();
+    // 当日の勤怠レコードがあれば取得、なければ新規作成
+    $attendance = Attendance::firstOrCreate(
+        ['user_id' => $user->id, 'date' => $today],
+        ['status' => Attendance::STATUS['OFF_DUTY']]
+    );
 
-        $action = $request->input('action');
+    $action = $request->input('action');
 
-        if ($action === 'start_work' && $attendance->clock_in) {
-            return back()->withErrors(['action' => 'すでに出勤済みです。']);
-        }
-
-        switch ($action) {
-            case 'start_work':
-                $attendance->status = Attendance::STATUS['WORKING'];
-                $attendance->clock_in = now();
-                break;
-
-            case 'start_break':
-                $attendance->status = Attendance::STATUS['ON_BREAK'];
-                BreakTime::create([
-                    'attendance_id' => $attendance->id,
-                    'user_id' => Auth::id(),
-                    'break_start_at' => now()
-                ]);
-                break;
-
-            case 'end_break':
-                $latestBreak = BreakTime::where('attendance_id', $attendance->id)
-                    ->whereNull('break_end_at')
-                    ->latest()
-                    ->first();
-                if ($latestBreak) {
-                    $latestBreak->break_end_at = now();
-                    $latestBreak->save();
-                }
-                $attendance->status = Attendance::STATUS['WORKING'];
-                break;
-
-            case 'end_work':
-                $attendance->status = Attendance::STATUS['FINISHED'];
-                $attendance->clock_out = now();
-                $attendance->save();
-                return redirect()->route('attendance.create');
-        }
-
-        $attendance->save();
-
-        return redirect()->route('attendance.create');
+    if ($action === 'start_work' && $attendance->clock_in) {
+        return back()->withErrors(['action' => 'すでに出勤済みです。']);
     }
+
+    switch ($action) {
+        case 'start_work':
+            $attendance->status = Attendance::STATUS['WORKING'];
+            $attendance->clock_in = now();
+            break;
+
+        case 'start_break':
+            $attendance->status = Attendance::STATUS['ON_BREAK'];
+            BreakTime::create([
+                'attendance_id' => $attendance->id,
+                'user_id' => $user->id,
+                'break_start_at' => now(),
+            ]);
+            break;
+
+        case 'end_break':
+            $latestBreak = BreakTime::where('attendance_id', $attendance->id)
+                ->whereNull('break_end_at')
+                ->latest()
+                ->first();
+            if ($latestBreak) {
+                $latestBreak->break_end_at = now();
+                $latestBreak->save();
+            }
+            $attendance->status = Attendance::STATUS['WORKING'];
+            break;
+
+        case 'end_work':
+            $attendance->status = Attendance::STATUS['FINISHED'];
+            $attendance->clock_out = now();
+            $attendance->save();
+            return redirect()->route('attendance.create');
+    }
+
+    $attendance->save();
+
+    return redirect()->route('attendance.create');
+}
 
     public function index(Request $request)
     {
