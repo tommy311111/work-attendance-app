@@ -62,7 +62,6 @@ if (!$attendance) {
             $attendance->status = Attendance::STATUS['ON_BREAK'];
             BreakTime::create([
                 'attendance_id' => $attendance->id,
-                'user_id' => $user->id,
                 'break_start_at' => now(),
             ]);
             break;
