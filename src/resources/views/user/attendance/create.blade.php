@@ -10,7 +10,7 @@
         {{ $attendance->status }}
     </div>
     <div class="attendance__date">
-        {{ $today->format('Y年n月j日')}}（{{ $weekdayJapanese }}）
+        {{ $today->format('Y年n月j日') }}（{{ $weekdayJapanese }}）
     </div>
     <div id="clock" class="attendance__clock"></div>
     <div class="attendance__form">
