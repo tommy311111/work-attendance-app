@@ -14,10 +14,10 @@
         <p class="verify__alert">認証メールを送信しました。</p>
     @endif
 
-    <form method="POST" action="{{ route('verification.send') }}" class="verify__form">
-        @csrf
-        <button type="submit" class="verify__button">認証はこちらから</button>
-    </form>
+    {{-- 認証はこちらから → Mailtrap に遷移 --}}
+<a href="https://mailtrap.io/inboxes" target="_blank" class="verify__button">
+    認証はこちらから
+</a>
 
     <form method="POST" action="{{ route('verification.send') }}" class="verify__form">
         @csrf
