@@ -19,14 +19,15 @@ class UserAttendanceListTest extends TestCase
 
         // 勤怠情報を複数作成
         $attendances = Attendance::factory()->count(3)->sequence(
-            fn ($sequence) => [
-                'user_id' => $user->id,
-                'status' => Attendance::STATUS['FINISHED'],
-                'clock_in' => now()->subHours(8),
-                'clock_out' => now()->subHours(0),
-                'date' => now()->subDays($sequence->index),
-            ]
-        )->create();
+    fn ($sequence) => [
+        'user_id' => $user->id,
+        'status' => Attendance::STATUS['FINISHED'],
+        'clock_in' => now()->startOfMonth()->addDays($sequence->index)->setTime(9, 0),
+        'clock_out' => now()->startOfMonth()->addDays($sequence->index)->setTime(18, 0),
+        'date' => now()->startOfMonth()->addDays($sequence->index),
+    ]
+)->create();
+
 
         $this->actingAs($user)
              ->get(route('attendance.index'))
