@@ -11,16 +11,16 @@ class AdminLoginTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
-    public function メールアドレスが未入力の場合_バリデーションメッセージが表示される()
+    public function test_メールアドレスが未入力の場合_バリデーションメッセージが表示される()
     {
-        $admin = User::factory()->create([
+        User::factory()->create([
             'email' => 'admin@example.com',
             'password' => Hash::make('password123'),
             'role' => 'admin',
         ]);
 
-        $this->get(route('admin.login'));
+        $response = $this->get(route('admin.login'));
+        $response->assertStatus(200);
 
         $response = $this->post('/admin/login', [
             'email' => '',
@@ -32,16 +32,16 @@ class AdminLoginTest extends TestCase
         ]);
     }
 
-    /** @test */
-    public function パスワードが未入力の場合_バリデーションメッセージが表示される()
+    public function test_パスワードが未入力の場合_バリデーションメッセージが表示される()
     {
-        $admin = User::factory()->create([
+        User::factory()->create([
             'email' => 'admin@example.com',
             'password' => Hash::make('password123'),
             'role' => 'admin',
         ]);
 
-        $this->get(route('admin.login'));
+        $response = $this->get(route('admin.login'));
+        $response->assertStatus(200);
 
         $response = $this->post('/admin/login', [
             'email' => 'admin@example.com',
@@ -53,16 +53,16 @@ class AdminLoginTest extends TestCase
         ]);
     }
 
-    /** @test */
-    public function 登録内容と一致しない場合_バリデーションメッセージが表示される()
+    public function test_登録内容と一致しない場合_バリデーションメッセージが表示される()
     {
-        $admin = User::factory()->create([
+        User::factory()->create([
             'email' => 'admin@example.com',
             'password' => Hash::make('password123'),
             'role' => 'admin',
         ]);
 
-        $this->get(route('admin.login'));
+        $response = $this->get(route('admin.login'));
+        $response->assertStatus(200);
 
         $response = $this->post('/admin/login', [
             'email' => 'wrong@example.com',
