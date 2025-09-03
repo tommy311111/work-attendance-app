@@ -14,9 +14,8 @@ class AttendanceRequestListTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    public function 承認待ちに自分の申請が表示される()
+    public function 「承認待ち」にログインユーザーが行った申請が全て表示されていること()
     {
-        // ユーザーと勤怠を作成
         $user = User::factory()->create();
         $attendance = Attendance::factory()->create([
             'user_id' => $user->id,
@@ -24,25 +23,22 @@ class AttendanceRequestListTest extends TestCase
             'clock_out' => Carbon::parse('18:00'),
         ]);
 
-        // ユーザーとしてログイン
         $this->actingAs($user);
 
-        // 勤怠詳細を修正して修正申請を保存する（postリクエスト）
-        $request1 = $this->post(route('attendance-requests.store', $attendance->id), [
+        $this->post(route('attendance-requests.store', $attendance->id), [
             'clock_in' => '09:30',
             'clock_out' => '18:30',
             'breaks' => [],
             'reason' => '修正理由1',
         ]);
 
-        $request2 = $this->post(route('attendance-requests.store', $attendance->id), [
+        $this->post(route('attendance-requests.store', $attendance->id), [
             'clock_in' => '09:15',
             'clock_out' => '18:15',
             'breaks' => [],
             'reason' => '修正理由2',
         ]);
 
-        // 申請一覧画面にアクセス（承認待ちタブ）
         $response = $this->get(route('attendance_requests.list', ['status' => 'pending']));
 
         $response->assertStatus(200)
@@ -51,77 +47,74 @@ class AttendanceRequestListTest extends TestCase
                  ->assertSee('修正理由2');
     }
 
-        /** @test */
-public function 承認済みに管理者が承認した申請が表示される()
-{
-    // 1. 勤怠情報が登録されたユーザーを作成
-    $user = User::factory()->create();
-    $attendance = Attendance::factory()->create(['user_id' => $user->id]);
+    /** @test */
+    public function 「承認済み」に管理者が承認した修正申請が全て表示されている()
+    {
+        $user = User::factory()->create();
+        $attendance = Attendance::factory()->create(['user_id' => $user->id]);
 
-    // 2. 勤怠詳細を修正し申請を保存（ユーザー側）
-    $request = AttendanceRequest::factory()->create([
-        'attendance_id' => $attendance->id,
-        'user_id' => $user->id,
-        'status' => 'pending',
-        'reason' => '承認理由',
-    ]);
+        $request1 = AttendanceRequest::factory()->create([
+            'attendance_id' => $attendance->id,
+            'user_id' => $user->id,
+            'status' => 'pending',
+            'reason' => '承認理由1',
+        ]);
 
-    // 3. 管理者ユーザーで承認
-    $admin = User::factory()->create(['role' => 'admin']);
-    $this->actingAs($admin)
-         ->put(route('stamp_correction_request.approve', $request->id), [
-             '_method' => 'PUT',
-         ]);
+        $request2 = AttendanceRequest::factory()->create([
+            'attendance_id' => $attendance->id,
+            'user_id' => $user->id,
+            'status' => 'pending',
+            'reason' => '承認理由2',
+        ]);
 
-    // 4. ユーザーで申請一覧画面を開く
-    $response = $this->actingAs($user)
-                     ->get(route('attendance_requests.list', ['status' => 'approved']));
+        $admin = User::factory()->create(['role' => 'admin']);
 
-    // 期待挙動：承認済みに管理者が承認した申請が全て表示されている
-    $response->assertStatus(200)
-             ->assertSee('承認済み')
-             ->assertSee('承認理由');
-}
+        $this->actingAs($admin)
+             ->put(route('stamp_correction_request.approve', $request1->id), ['_method' => 'PUT']);
 
+        $this->actingAs($admin)
+             ->put(route('stamp_correction_request.approve', $request2->id), ['_method' => 'PUT']);
 
-/** @test */
-public function 承認待ちタブで自分の申請が表示され詳細画面に遷移できる()
-{
-    // ユーザーと勤怠情報作成
-    $user = User::factory()->create();
-    $attendance = Attendance::factory()->create(['user_id' => $user->id]);
+        $response = $this->actingAs($user)
+                         ->get(route('attendance_requests.list', ['status' => 'approved']));
 
-    // 勤怠詳細を修正して修正申請を保存する（POSTリクエスト）
-    $responsePost = $this->actingAs($user)
-                         ->post(route('attendance-requests.store', $attendance->id), [
-                             'clock_in' => '09:30',
-                             'clock_out' => '18:30',
-                             'breaks' => [],
-                             'reason' => '詳細確認用',
-                         ]);
+        $response->assertStatus(200)
+                 ->assertSee('承認済み')
+                 ->assertSee('承認理由1')
+                 ->assertSee('承認理由2');
+    }
 
-    $responsePost->assertStatus(302); // リダイレクトで保存成功
+    /** @test */
+    public function 各申請の「詳細」を押下すると申請詳細画面に遷移する()
+    {
+        $user = User::factory()->create();
+        $attendance = Attendance::factory()->create(['user_id' => $user->id]);
 
-    $request = AttendanceRequest::where('attendance_id', $attendance->id)
-                                ->where('user_id', $user->id)
-                                ->first();
+        $this->actingAs($user)
+             ->post(route('attendance-requests.store', $attendance->id), [
+                 'clock_in' => '09:30',
+                 'clock_out' => '18:30',
+                 'breaks' => [],
+                 'reason' => '詳細確認用',
+             ])->assertStatus(302);
 
-    $this->assertNotNull($request);
+        $request = AttendanceRequest::where('attendance_id', $attendance->id)
+                                    ->where('user_id', $user->id)
+                                    ->first();
 
-    // 申請一覧画面にアクセス（承認待ちタブ）
-    $responseList = $this->actingAs($user)
-                         ->get(route('attendance_requests.list', ['status' => 'pending']));
+        $this->assertNotNull($request);
 
-    $responseList->assertStatus(200)
-                 ->assertSee('承認待ち')
-                 ->assertSee('詳細確認用');
+        $responseList = $this->actingAs($user)
+                             ->get(route('attendance_requests.list', ['status' => 'pending']));
 
-    // 詳細ボタンを押して編集画面に遷移
-    $responseDetail = $this->actingAs($user)
-                           ->get(route('attendance-requests.edit', $request->id));
+        $responseList->assertStatus(200)
+                     ->assertSee('承認待ち')
+                     ->assertSee('詳細確認用');
 
-    $responseDetail->assertStatus(200)
-                   ->assertSee('詳細確認用');
-}
+        $responseDetail = $this->actingAs($user)
+                               ->get(route('attendance-requests.edit', $request->id));
 
+        $responseDetail->assertStatus(200)
+                       ->assertSee('詳細確認用');
+    }
 }
