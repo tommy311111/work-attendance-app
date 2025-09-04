@@ -17,10 +17,8 @@ class EmailVerificationTest extends TestCase
     /** @test */
     public function 会員登録後に認証メールが送信される()
     {
-        // メール送信をフェイク
         Notification::fake();
 
-        // 会員登録処理（実際のフォーム入力を模擬）
         $response = $this->post('/register', [
             'name' => 'テストユーザー',
             'email' => 'test@example.com',
@@ -28,22 +26,18 @@ class EmailVerificationTest extends TestCase
             'password_confirmation' => 'password123',
         ]);
 
-        // 登録後にユーザーが作成されていること
         $this->assertDatabaseHas('users', [
             'email' => 'test@example.com',
         ]);
 
         $user = User::where('email', 'test@example.com')->first();
 
-        // 認証メールが送信されていること
         Notification::assertSentTo(
             [$user],
             CustomVerifyEmail::class
         );
 
-        // 登録後のリダイレクト確認（必要に応じて）
         $response->assertRedirect('/email/verify');
-    
     }
 
     /** @test */
@@ -54,7 +48,6 @@ class EmailVerificationTest extends TestCase
         $response = $this->actingAs($user)->get(route('verification.notice'));
 
         $response->assertStatus(200);
-        // Mailtrap のリンクが表示されているか確認
         $response->assertSee('https://mailtrap.io/inboxes');
     }
 

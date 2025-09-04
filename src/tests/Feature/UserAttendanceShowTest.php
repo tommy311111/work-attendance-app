@@ -4,7 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\User;
 use App\Models\Attendance;
-use App\Models\BreakTime; // もし休憩モデルがある場合
+use App\Models\BreakTime;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use Carbon\Carbon;
@@ -14,7 +14,7 @@ class UserAttendanceShowTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    public function 勤怠詳細画面に名前が表示される()
+    public function 勤怠詳細画面の「名前」がログインユーザーの氏名になっている()
     {
         $user = User::factory()->create();
         $attendance = Attendance::factory()->create([
@@ -29,7 +29,7 @@ class UserAttendanceShowTest extends TestCase
     }
 
     /** @test */
-    public function 勤怠詳細画面に日付が表示される()
+    public function 勤怠詳細画面の「日付」が選択した日付になっている()
     {
         $user = User::factory()->create();
         $attendance = Attendance::factory()->create([
@@ -46,7 +46,7 @@ class UserAttendanceShowTest extends TestCase
     }
 
     /** @test */
-    public function 勤怠詳細画面に出勤退勤時間が表示される()
+    public function 「出勤・退勤」にて記されている時間がログインユーザーの打刻と一致している()
     {
         $user = User::factory()->create();
         $attendance = Attendance::factory()->create([
@@ -64,7 +64,7 @@ class UserAttendanceShowTest extends TestCase
     }
 
     /** @test */
-    public function 勤怠詳細画面に休憩時間が表示される()
+    public function 「休憩」にて記されている時間がログインユーザーの打刻と一致している()
     {
         $user = User::factory()->create();
         $attendance = Attendance::factory()->create([
@@ -72,7 +72,6 @@ class UserAttendanceShowTest extends TestCase
             'status' => Attendance::STATUS['FINISHED'],
         ]);
 
-        // 休憩がある場合
         $break1 = $attendance->breaks()->create([
             'break_start_at' => Carbon::parse('12:00'),
             'break_end_at' => Carbon::parse('12:45'),

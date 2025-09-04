@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\User;
 use App\Models\Attendance;
+use App\Models\BreakTime;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use Carbon\Carbon;
@@ -17,24 +18,22 @@ class UserAttendanceListTest extends TestCase
     {
         $user = User::factory()->create();
 
-        // 勤怠情報を複数作成
         $attendances = Attendance::factory()->count(3)->sequence(
-    fn ($sequence) => [
-        'user_id' => $user->id,
-        'status' => Attendance::STATUS['FINISHED'],
-        'clock_in' => now()->startOfMonth()->addDays($sequence->index)->setTime(9, 0),
-        'clock_out' => now()->startOfMonth()->addDays($sequence->index)->setTime(18, 0),
-        'date' => now()->startOfMonth()->addDays($sequence->index),
-    ]
-)->create();
-
+            fn ($sequence) => [
+                'user_id' => $user->id,
+                'status' => Attendance::STATUS['FINISHED'],
+                'clock_in' => now()->startOfMonth()->addDays($sequence->index)->setTime(9, 0),
+                'clock_out' => now()->startOfMonth()->addDays($sequence->index)->setTime(18, 0),
+                'date' => now()->startOfMonth()->addDays($sequence->index),
+            ]
+        )->create();
 
         $this->actingAs($user)
-             ->get(route('attendance.index'))
-             ->assertStatus(200)
-             ->assertSee($attendances[0]->date->format('m/d'))
-             ->assertSee($attendances[1]->date->format('m/d'))
-             ->assertSee($attendances[2]->date->format('m/d'));
+            ->get(route('attendance.index'))
+            ->assertStatus(200)
+            ->assertSee($attendances[0]->date->format('m/d'))
+            ->assertSee($attendances[1]->date->format('m/d'))
+            ->assertSee($attendances[2]->date->format('m/d'));
     }
 
     /** @test */
@@ -44,9 +43,9 @@ class UserAttendanceListTest extends TestCase
         $today = Carbon::today();
 
         $this->actingAs($user)
-             ->get(route('attendance.index'))
-             ->assertStatus(200)
-             ->assertSee($today->format('Y/m'));
+            ->get(route('attendance.index'))
+            ->assertStatus(200)
+            ->assertSee($today->format('Y/m'));
     }
 
     /** @test */
@@ -55,7 +54,6 @@ class UserAttendanceListTest extends TestCase
         $user = User::factory()->create();
         $prevMonth = Carbon::today()->subMonth();
 
-        // 前月の勤怠を3件作成
         $attendances = Attendance::factory()->count(3)->make([
             'user_id' => $user->id,
             'status' => Attendance::STATUS['FINISHED'],
@@ -63,17 +61,25 @@ class UserAttendanceListTest extends TestCase
 
         foreach ($attendances as $i => $attendance) {
             $attendance->date = $prevMonth->copy()->startOfMonth()->addDays($i);
+            $attendance->clock_in = '09:00';
+            $attendance->clock_out = '18:00';
             $attendance->save();
+
+            BreakTime::factory()->create([
+                'attendance_id' => $attendance->id,
+                'break_start_at' => '12:00',
+                'break_end_at' => '12:30',
+            ]);
         }
 
-        // 前月ページにアクセス
         $response = $this->actingAs($user)
-                         ->get(route('attendance.index', ['month' => $prevMonth->format('Y-m')]))
-                         ->assertStatus(200);
+            ->get(route('attendance.index', ['month' => $prevMonth->format('Y-m')]))
+            ->assertStatus(200);
 
-        // それぞれの日付が表示されているか確認
         foreach ($attendances as $attendance) {
             $response->assertSee($attendance->date->format('m/d'));
+            $response->assertSee('0:30');
+            $response->assertSee('8:30');
         }
     }
 
@@ -83,7 +89,6 @@ class UserAttendanceListTest extends TestCase
         $user = User::factory()->create();
         $nextMonth = Carbon::today()->addMonth();
 
-        // 翌月の勤怠を3件作成
         $attendances = Attendance::factory()->count(3)->make([
             'user_id' => $user->id,
             'status' => Attendance::STATUS['FINISHED'],
@@ -91,17 +96,25 @@ class UserAttendanceListTest extends TestCase
 
         foreach ($attendances as $i => $attendance) {
             $attendance->date = $nextMonth->copy()->startOfMonth()->addDays($i);
+            $attendance->clock_in = '09:00';
+            $attendance->clock_out = '18:00';
             $attendance->save();
+
+            BreakTime::factory()->create([
+                'attendance_id' => $attendance->id,
+                'break_start_at' => '12:00',
+                'break_end_at' => '12:30',
+            ]);
         }
 
-        // 翌月ページにアクセス
         $response = $this->actingAs($user)
-                         ->get(route('attendance.index', ['month' => $nextMonth->format('Y-m')]))
-                         ->assertStatus(200);
+            ->get(route('attendance.index', ['month' => $nextMonth->format('Y-m')]))
+            ->assertStatus(200);
 
-        // それぞれの日付が表示されているか確認
         foreach ($attendances as $attendance) {
             $response->assertSee($attendance->date->format('m/d'));
+            $response->assertSee('0:30');
+            $response->assertSee('8:30');
         }
     }
 
@@ -116,9 +129,9 @@ class UserAttendanceListTest extends TestCase
         ]);
 
         $this->actingAs($user)
-             ->get(route('attendance.show', $attendance->id))
-             ->assertStatus(200)
-             ->assertSee('勤怠詳細')
-             ->assertSee($attendance->date->format('Y年'));
+            ->get(route('attendance.show', $attendance->id))
+            ->assertStatus(200)
+            ->assertSee('勤怠詳細')
+            ->assertSee($attendance->date->format('Y年'));
     }
 }
