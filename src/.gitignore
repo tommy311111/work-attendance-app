@@ -13,6 +13,8 @@ npm-debug.log
 yarn-error.log
 /.idea
 /.vscode
+test-clone/
+
 
 # 一旦すべての storage 以下を除外
 /src/storage/*
