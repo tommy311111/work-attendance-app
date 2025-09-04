@@ -16,11 +16,9 @@ class AttendanceUpdateRequestTest extends TestCase
     /** @test */
     public function 修正申請が実行され管理者画面に表示される()
     {
-        // 一般ユーザーと管理者ユーザーを作成
         $user = User::factory()->create();
         $admin = User::factory()->create(['role' => 'admin']);
 
-        // 勤怠情報を作成
         $attendance = Attendance::factory()->create([
             'user_id' => $user->id,
             'clock_in' => Carbon::parse('09:00'),
@@ -29,11 +27,9 @@ class AttendanceUpdateRequestTest extends TestCase
             'status' => Attendance::STATUS['FINISHED'],
         ]);
 
-        // 修正申請用の時間（timestamp対応）
         $requestedClockIn = Carbon::parse($attendance->date->format('Y-m-d') . ' 09:30');
         $requestedClockOut = Carbon::parse($attendance->date->format('Y-m-d') . ' 18:30');
 
-        // 一般ユーザーとして修正申請を送信
         $response = $this->actingAs($user)
             ->post(route('attendance-requests.store', $attendance->id), [
                 'clock_in' => $requestedClockIn->format('H:i'),
@@ -42,9 +38,8 @@ class AttendanceUpdateRequestTest extends TestCase
                 'reason' => '打刻修正テスト',
             ]);
 
-        $response->assertStatus(302); // リダイレクト確認
+        $response->assertStatus(302);
 
-        // 修正申請がDBに保存されているか確認
         $this->assertDatabaseHas('attendance_requests', [
             'attendance_id' => $attendance->id,
             'user_id' => $user->id,
@@ -55,21 +50,20 @@ class AttendanceUpdateRequestTest extends TestCase
 
         $attendanceRequest = AttendanceRequest::first();
 
-        // 管理者として申請承認画面にアクセスできるか確認
         $this->actingAs($admin)
-     ->get(route('stamp_correction_request.approve_form', $attendanceRequest->id))
-     ->assertStatus(200)
-     ->assertSee(str_replace(' ', '　', $user->name)) // 半角を全角に置換してチェック
-     ->assertSee($requestedClockIn->format('H:i'))
-     ->assertSee($requestedClockOut->format('H:i'));
+            ->get(route('stamp_correction_request.approve_form', $attendanceRequest->id))
+            ->assertStatus(200)
+            ->assertSee(str_replace(' ', '　', $user->name))
+            ->assertSee($requestedClockIn->format('H:i'))
+            ->assertSee($requestedClockOut->format('H:i'))
+            ->assertSee('打刻修正テスト');
 
-
-        // 管理者の申請一覧画面に「承認待ち」として表示されるか確認
         $this->actingAs($admin)
-             ->get(route('attendance_requests.list', ['status' => 'pending']))
-             ->assertStatus(200)
-             ->assertSee($user->name)
-             ->assertSee('承認待ち')
-             ->assertSee($attendance->date->format('Y/m/d'));
+            ->get(route('attendance_requests.list', ['status' => 'pending']))
+            ->assertStatus(200)
+            ->assertSee($user->name)
+            ->assertSee('承認待ち')
+            ->assertSee($attendance->date->format('Y/m/d'))
+            ->assertSee('打刻修正テスト');
     }
 }

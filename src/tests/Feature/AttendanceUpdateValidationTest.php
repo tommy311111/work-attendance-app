@@ -23,23 +23,21 @@ class AttendanceUpdateValidationTest extends TestCase
             'status' => Attendance::STATUS['FINISHED'],
         ]);
 
-        // 勤怠詳細ページを開く
         $this->actingAs($user)
-             ->get(route('attendance.show', $attendance->id))
-             ->assertStatus(200)
-             ->assertSee('勤怠詳細');
+            ->get(route('attendance.show', $attendance->id))
+            ->assertStatus(200)
+            ->assertSee('勤怠詳細');
 
-        // 出勤時間を退勤より後にして送信
         $response = $this->actingAs($user)
-                         ->post(route('attendance-requests.store', $attendance->id), [
-                             'clock_in' => '19:00',
-                             'clock_out' => '18:00',
-                             'breaks' => [],
-                             'reason' => '備考',
-                         ]);
+            ->post(route('attendance-requests.store', $attendance->id), [
+                'clock_in' => '19:00',
+                'clock_out' => '18:00',
+                'breaks' => [],
+                'reason' => '備考',
+            ]);
 
         $response->assertSessionHasErrors([
-            'clock_in' => '出勤時間もしくは退勤時間が不適切な値です。'
+            'clock_in' => '出勤時間もしくは退勤時間が不適切な値です。',
         ]);
     }
 
@@ -55,22 +53,21 @@ class AttendanceUpdateValidationTest extends TestCase
         ]);
 
         $this->actingAs($user)
-             ->get(route('attendance.show', $attendance->id))
-             ->assertStatus(200);
+            ->get(route('attendance.show', $attendance->id))
+            ->assertStatus(200);
 
-        // 休憩開始時間が退勤より後
         $response = $this->actingAs($user)
-                         ->post(route('attendance-requests.store', $attendance->id), [
-                             'clock_in' => '09:00',
-                             'clock_out' => '18:00',
-                             'breaks' => [
-                                 ['id' => null, 'break_start' => '19:00', 'break_end' => '19:30']
-                             ],
-                             'reason' => '備考',
-                         ]);
+            ->post(route('attendance-requests.store', $attendance->id), [
+                'clock_in' => '09:00',
+                'clock_out' => '18:00',
+                'breaks' => [
+                    ['id' => null, 'break_start' => '19:00', 'break_end' => '19:30'],
+                ],
+                'reason' => '備考',
+            ]);
 
         $response->assertSessionHasErrors([
-            'breaks.0.break_start' => '休憩時間が不適切な値です。'
+            'breaks.0.break_start' => '休憩時間が不適切な値です。',
         ]);
     }
 
@@ -86,22 +83,21 @@ class AttendanceUpdateValidationTest extends TestCase
         ]);
 
         $this->actingAs($user)
-             ->get(route('attendance.show', $attendance->id))
-             ->assertStatus(200);
+            ->get(route('attendance.show', $attendance->id))
+            ->assertStatus(200);
 
-        // 休憩終了時間が退勤より後
         $response = $this->actingAs($user)
-                         ->post(route('attendance-requests.store', $attendance->id), [
-                             'clock_in' => '09:00',
-                             'clock_out' => '18:00',
-                             'breaks' => [
-                                 ['id' => null, 'break_start' => '12:00', 'break_end' => '19:00']
-                             ],
-                             'reason' => '備考',
-                         ]);
+            ->post(route('attendance-requests.store', $attendance->id), [
+                'clock_in' => '09:00',
+                'clock_out' => '18:00',
+                'breaks' => [
+                    ['id' => null, 'break_start' => '12:00', 'break_end' => '19:00'],
+                ],
+                'reason' => '備考',
+            ]);
 
         $response->assertSessionHasErrors([
-            'breaks.0.break_end' => '休憩時間もしくは退勤時間が不適切な値です。'
+            'breaks.0.break_end' => '休憩時間もしくは退勤時間が不適切な値です。',
         ]);
     }
 
@@ -117,20 +113,19 @@ class AttendanceUpdateValidationTest extends TestCase
         ]);
 
         $this->actingAs($user)
-             ->get(route('attendance.show', $attendance->id))
-             ->assertStatus(200);
+            ->get(route('attendance.show', $attendance->id))
+            ->assertStatus(200);
 
-        // 備考欄未入力
         $response = $this->actingAs($user)
-                         ->post(route('attendance-requests.store', $attendance->id), [
-                             'clock_in' => '09:00',
-                             'clock_out' => '18:00',
-                             'breaks' => [],
-                             'reason' => '',
-                         ]);
+            ->post(route('attendance-requests.store', $attendance->id), [
+                'clock_in' => '09:00',
+                'clock_out' => '18:00',
+                'breaks' => [],
+                'reason' => '',
+            ]);
 
         $response->assertSessionHasErrors([
-            'reason' => '備考を記入してください。'
+            'reason' => '備考を記入してください。',
         ]);
     }
 }
