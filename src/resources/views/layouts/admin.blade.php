@@ -14,7 +14,7 @@
 
     <header class="header">
         <div class="header__logo">
-            <a href="{{ route('attendance.create') }}">
+            <a href="{{ route('admin.attendance.index') }}">
                 <img src="{{ asset('storage/images/logo.svg') }}" alt="COACHTECH">
             </a>
         </div>
