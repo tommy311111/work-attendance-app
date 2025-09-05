@@ -19,7 +19,7 @@ class AttendanceFactory extends Factory
             'date' => $carbonDate->format('Y-m-d'),
             'clock_in' => $clockIn,
             'clock_out' => $clockOut,
-            'status' => '出勤',
+            'status' => '出勤中',
         ];
     }
 
