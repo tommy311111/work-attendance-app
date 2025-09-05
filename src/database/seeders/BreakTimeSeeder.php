@@ -10,7 +10,7 @@ class BreakTimeSeeder extends Seeder
 {
     public function run(): void
     {
-        $attendances = Attendance::where('status', '出勤')->get();
+        $attendances = Attendance::where('status', '出勤中')->get();
 
         foreach ($attendances as $attendance) {
             if ($attendance->status !== '勤務外') {
