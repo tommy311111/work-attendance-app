@@ -206,6 +206,7 @@ php artisan test --env=testing
 - 勤怠登録画面
 - 勤怠一覧画面
 - 勤怠詳細画面
+- 申請承認待ち画面
 - 申請一覧画面
 
 ### 管理者画面
@@ -217,7 +218,7 @@ php artisan test --env=testing
 - 申請一覧画面
 - 修正申請承認画面
 
-> （全13画面）
+> （全14画面）
 
 ## URL
 - 開発環境：http://localhost
